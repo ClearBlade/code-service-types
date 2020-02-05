@@ -1,0 +1,25 @@
+{
+  "name": "@clearblade/code-service-types",
+  "version": "1.0.0",
+  "description": "TypeScript declarations for the ClearBlade Code Service engine",
+  "main": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ClearBlade/code-service-types.git"
+  },
+  "keywords": [
+    "ClearBlade",
+    "code",
+    "service",
+    "types"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ClearBlade/code-service-types/issues"
+  },
+  "homepage": "https://github.com/ClearBlade/code-service-types#readme"
+}
