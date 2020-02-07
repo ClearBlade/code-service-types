@@ -25,7 +25,8 @@ ClearBlade.init({
     systemSecret: "abcdef",
     userEmail: "test@test.com",
     userToken: "abcdef",
-    userid: "abcdef"
+    userid: "abcdef",
+    service_instance_id: "abcdef"
   }
 });
 
@@ -39,7 +40,7 @@ ClearBlade.loginUser("test@test.com", "password", genericCallback);
 
 ClearBlade.getAllCollections(genericCallback);
 const edgeID = ClearBlade.edgeId();
-const isEdge = ClearBlade.isEdge(genericCallback);
+const isEdge = ClearBlade.isEdge();
 if (ClearBlade.isObjectEmpty({ test: "test" })) {
   ClearBlade.logger("Object is empty");
 }
@@ -104,15 +105,26 @@ ClearBlade.validateEmailPassword("test@test.com", "password");
 ///////////////////////////////////////
 // Collection API invocations
 ///////////////////////////////////////
+
+const successCallback = (error: boolean, response: string) => {};
+const fetchCallback = (
+  error: boolean,
+  data: CbServer.CollectionFetchData
+) => {};
+const createCallback = (
+  error: boolean,
+  response: CbServer.CollectionSchema[]
+) => {};
+
 coll1.addColumn({ name: "column1" }, genericCallback);
 coll1.dropColumn("column1", genericCallback);
 coll1.deleteCollection(genericCallback);
-coll1.fetch(query1.query, genericCallback);
-coll1.create(ClearBlade.Item({}, ""), genericCallback);
-coll1.update(query1.query, {}, genericCallback);
-coll1.remove(query1.query, genericCallback);
+coll1.fetch(query1, fetchCallback);
+coll1.create(ClearBlade.Item({}, "").data, createCallback);
+coll1.update(query1, {}, successCallback);
+coll1.remove(query1, genericCallback);
 coll1.columns(genericCallback);
-coll1.count(query1.query, genericCallback);
+coll1.count(query1, genericCallback);
 
 ///////////////////////////////////////
 // Query API invocations
@@ -215,5 +227,29 @@ ClearBlade.Trigger.Fetch("triggername", genericCallback);
 ///////////////////////////////////////
 ClearBlade.Timer.Create("timername", {}, genericCallback);
 ClearBlade.Timer.Fetch("timername", genericCallback);
+
+///////////////////////////////////////
+// Resp API
+///////////////////////////////////////
+const customResponseCallBack: CbServer.CbCallback = (
+  error: boolean,
+  resp: CbServer.Resp
+) => {
+  resp.send({ custom: "response" });
+};
+
+const statusCodeCallBack: CbServer.CbCallback = (
+  error: boolean,
+  resp: CbServer.Resp
+) => {
+  resp.status(200);
+};
+
+const setHeaderCallBack: CbServer.CbCallback = (
+  error: boolean,
+  resp: CbServer.Resp
+) => {
+  resp.set({ headerA: "value" });
+};
 
 declare var ClearBlade: CbServer.ClearBladeGlobal;
