@@ -1,9 +1,8 @@
-// Type definitions for non-npm package clearbladejs-server
+// Custom Type definitions for non-npm package clearbladejs-server
 // Project: https://github.com/ClearBlade/native-libraries/blob/master/clearblade.md
 // Definitions by: Jim Bouquet <https://github.com/ClearBlade>
 //                 Clark Bynum <https://github.com/ClearBlade>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 3.7.3
+// Minimum TypeScript Version: 3.0
 
 declare namespace CbServer {
   interface BasicReq {
@@ -24,6 +23,9 @@ declare namespace CbServer {
   interface Resp {
     error(msg: unknown): never;
     success(msg: unknown): never;
+    send(msg: unknown): never;
+    set(headers: object): never;
+    status(status_code: number): never;
   }
   let resp: Resp;
 
@@ -300,7 +302,7 @@ declare namespace CbServer {
     getAllServices(callback: CbCallback): void;
   }
 
-  type DeploymentOptions = {};
+  interface DeploymentOptions {}
 
   interface Deployment {
     user: APIUser;
@@ -372,10 +374,7 @@ declare namespace CbServer {
     getCurrentTopics(callback: CbCallback): void;
     publish(topic: string, payload: string | ArrayBuffer): void;
     subscribe(topic: string, callback: CbCallback<string | null>): void;
-    waitForMessage(
-      topics: Array<string>,
-      wfmCallback: WaitForMessageCallback
-    ): void;
+    waitForMessage(topics: string[], wfmCallback: WaitForMessageCallback): void;
     setTimeout(
       timeout: number,
       topic: string,
@@ -393,7 +392,7 @@ declare namespace CbServer {
     cancelCBInterval(id: string, cb: CbCallback<string>): void;
   }
 
-  type MessagingOptions = {};
+  interface MessagingOptions {}
 
   interface Device {
     URI: string;

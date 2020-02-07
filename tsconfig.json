@@ -13,5 +13,5 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["index.d.ts", "clearbladejs-server-tests.ts"]
+  "files": ["index.d.ts", "tests.ts"]
 }
