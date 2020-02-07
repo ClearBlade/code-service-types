@@ -231,24 +231,18 @@ ClearBlade.Timer.Fetch("timername", genericCallback);
 ///////////////////////////////////////
 // Resp API
 ///////////////////////////////////////
-const customResponseCallBack: CbServer.CbCallback = (
-  error: boolean,
+const customResponseCallBack = (
+  req: CbServer.BasicReq,
   resp: CbServer.Resp
 ) => {
   resp.send({ custom: "response" });
 };
 
-const statusCodeCallBack: CbServer.CbCallback = (
-  error: boolean,
-  resp: CbServer.Resp
-) => {
+const statusCodeCallBack = (req: CbServer.BasicReq, resp: CbServer.Resp) => {
   resp.status(200);
 };
 
-const setHeaderCallBack: CbServer.CbCallback = (
-  error: boolean,
-  resp: CbServer.Resp
-) => {
+const setHeaderCallBack = (req: CbServer.BasicReq, resp: CbServer.Resp) => {
   resp.set({ headerA: "value" });
 };
 
