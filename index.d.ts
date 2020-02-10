@@ -24,8 +24,8 @@ declare namespace CbServer {
     error(msg: unknown): never;
     success(msg: unknown): never;
     send(msg: unknown): never;
-    set(headers: object): never;
-    status(status_code: number): never;
+    set(headers: object): void;
+    status(status_code: number): void;
   }
   let resp: Resp;
 
