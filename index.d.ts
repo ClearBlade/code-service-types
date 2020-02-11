@@ -465,12 +465,12 @@ declare namespace CbServer {
     Delete(callback: CbCallback): void;
   }
 
-  interface Cache {
-    get(key: string, cb: CbCallback<unknown>): void;
-    set(key: string, val: unknown, cb: CbCallback<string>): void;
-    setnx(key: string, val: unknown, cb: CbCallback<string>): void;
-    setMultiple(val: Record<string, unknown>, cb: CbCallback<string>): void;
-    getAll(cb: CbCallback<unknown>): void;
+  interface Cache<T = unknown> {
+    get(key: string, cb: CbCallback<T>): void;
+    set(key: string, val: T, cb: CbCallback<string>): void;
+    setnx(key: string, val: T, cb: CbCallback<string>): void;
+    setMultiple(val: Record<string, T>, cb: CbCallback<string>): void;
+    getAll(cb: CbCallback<T>): void;
     delete(key: string, cb: CbCallback<string>): void;
     flush(cb: CbCallback<string>): void;
   }
