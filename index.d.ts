@@ -209,16 +209,13 @@ declare namespace CbServer {
   interface Query {
     SELECTCOLUMNS?: string[];
     SORT?: QuerySortDirections;
-    FILTERS?: QueryFilter[];
+    FILTERS?: QueryFilter[][];
     PAGESIZE?: number;
     PAGENUM?: number;
   }
-  interface QueryFilter {
-    [QueryConditions: string]: QueryFilterValue;
-  }
-  interface QueryFilterValue {
-    [name: string]: QueryValue;
-  }
+  type QueryFilter = {
+    [key in QueryConditions]?: Array<Record<string, QueryValue>>;
+  };
   interface QueryObj {
     id: string;
     user: APIUser;
