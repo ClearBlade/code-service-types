@@ -79,13 +79,13 @@ declare namespace CbServer {
       column: string
     ): void;
     Code(): Code;
-    Collection(
+    Collection<T extends object>(
       options:
         | string
         | CollectionOptionsWithName
         | CollectionOptionsWithID
         | CollectionOptionsWithCollection
-    ): Collection;
+    ): Collection<T>;
     Deployment(): Deployment;
     Device(): Device;
     edgeId(): string;
@@ -156,7 +156,7 @@ declare namespace CbServer {
     PREVPAGEURL: string | null;
     TOTAL: number;
   };
-  interface Collection {
+  interface Collection<T extends object> {
     user: APIUser;
     URI: string;
     systemKey: string;
@@ -164,12 +164,12 @@ declare namespace CbServer {
     addColumn(options: object, callback: CbCallback): void;
     dropColumn(name: string, callback: CbCallback): void;
     deleteCollection(callback: CbCallback): void;
-    fetch<T extends object>(
+    fetch(
       query: QueryObj | CbCallback<CollectionFetchData<T>>,
       callback: CbCallback<CollectionFetchData<T>>
     ): void;
     create(
-      newItem: object | object[],
+      newItem: Partial<T> | Partial<T>[],
       callback: CbCallback<CollectionSchema[]>
     ): void;
     update(
