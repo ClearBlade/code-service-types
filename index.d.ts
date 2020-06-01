@@ -169,7 +169,7 @@ declare namespace CbServer {
       callback: CbCallback<CollectionFetchData<T>>
     ): void;
     create(
-      newItem: Partial<T> | Partial<T>[],
+      newItem: Partial<T> | Array<Partial<T>>,
       callback: CbCallback<CollectionSchema[]>
     ): void;
     update(
