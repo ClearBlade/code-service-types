@@ -3,13 +3,14 @@
 // Definitions by: Jim Bouquet <https://github.com/ClearBlade>
 //                 Clark Bynum <https://github.com/ClearBlade>
 // Minimum TypeScript Version: 3.0
-
 declare namespace CbServer {
-  interface BasicReq {
-    readonly isLogging: boolean;
-    readonly params: {
+  interface BasicReq<
+    T = {
       [id: string]: unknown;
-    };
+    }
+  > {
+    readonly isLogging: boolean;
+    readonly params: T & { trigger?: string; query?: Query };
     readonly systemKey: string;
     readonly systemSecret: string;
     readonly userEmail: string;
@@ -18,7 +19,6 @@ declare namespace CbServer {
     readonly service_instance_id: string;
   }
   type ReqTypes = BasicReq;
-
   let req: ReqTypes;
   interface Resp {
     error(msg: unknown): never;
@@ -28,13 +28,11 @@ declare namespace CbServer {
     status(status_code: number): void;
   }
   let resp: Resp;
-
   enum MessagingQOS {
     MESSAGING_QOS_AT_MOST_ONCE = 0,
     MESSAGING_QOS_AT_LEAST_ONCE = 1,
-    MESSAGING_QOS_EXACTLY_ONCE = 2
+    MESSAGING_QOS_EXACTLY_ONCE = 2,
   }
-
   interface InitOptions {
     systemKey: string;
     systemSecret: string;
@@ -52,27 +50,21 @@ declare namespace CbServer {
     defaultQoS?: MessagingQOS;
     callTimeout?: number;
   }
-
   interface APIUser {
     email: string;
     authToken: string;
     user_id?: string;
   }
-
   interface KeyValuePair {
     [key: string]: unknown;
   }
-
   type CbCallback<T = Resp> = (error: boolean, response: T) => void;
-
   interface ClearBladeGlobal extends ClearBladeInt {
     user: APIUser;
   }
-
   interface ClearBladeInt {
     Trigger: TriggerClass;
     Timer: TimerClass;
-
     about(): string;
     addToQuery(queryObj: QueryObj, key: string, value: string): void;
     addFilterToQuery(
@@ -87,13 +79,13 @@ declare namespace CbServer {
       column: string
     ): void;
     Code(): Code;
-    Collection(
+    Collection<T extends object>(
       options:
         | string
         | CollectionOptionsWithName
         | CollectionOptionsWithID
         | CollectionOptionsWithCollection
-    ): Collection;
+    ): Collection<T>;
     Deployment(): Deployment;
     Device(): Device;
     edgeId(): string;
@@ -124,7 +116,6 @@ declare namespace CbServer {
     setUser(email: string, authToken: string, userId: string): void;
     User(): AppUser;
     Cache(name: string): Cache;
-
     createDevice(
       name: string,
       data: object,
@@ -146,23 +137,18 @@ declare namespace CbServer {
     getAllDevicesForSystem(callback: CbCallback): void;
     validateEmailPassword(email: string, password: string): void;
   }
-
   interface CollectionOptionsWithCollection {
     collection: string;
   }
-
   interface CollectionOptionsWithName {
     collectionName: string;
   }
-
   interface CollectionOptionsWithID {
     collectionID: string;
   }
-
   type CollectionSchema<T extends {} = {}> = T & {
     item_id: string;
   };
-
   type CollectionFetchData<T extends {} = {}> = T & {
     DATA: Array<CollectionSchema<T>>;
     CURRENTPAGE: number;
@@ -170,26 +156,18 @@ declare namespace CbServer {
     PREVPAGEURL: string | null;
     TOTAL: number;
   };
-
-  type collectionFetchCallback = (
-    err: boolean,
-    data: CollectionFetchData
-  ) => void;
-
-  interface Collection {
+  interface Collection<T extends object> {
     user: APIUser;
     URI: string;
     systemKey: string;
     systemSecret: string;
-
     addColumn(options: object, callback: CbCallback): void;
     dropColumn(name: string, callback: CbCallback): void;
     deleteCollection(callback: CbCallback): void;
-    fetch(query: QueryObj, callback: collectionFetchCallback): void;
+    fetch(query: QueryObj, callback: CbCallback<CollectionFetchData<T>>): void;
+    fetch(callback: CbCallback<CollectionFetchData<T>>): void;
     create(
-      newItem:
-        | Partial<Record<string, unknown>>
-        | Array<Partial<Record<string, unknown>>>,
+      newItem: Partial<T> | Array<Partial<T>>,
       callback: CbCallback<CollectionSchema[]>
     ): void;
     update(
@@ -201,12 +179,10 @@ declare namespace CbServer {
     columns(callback: CbCallback): void;
     count(query: QueryObj, callback: CbCallback): void;
   }
-
   enum QuerySortDirections {
     QUERY_SORT_ASCENDING = "ASC",
-    QUERY_SORT_DESCENDING = "DESC"
+    QUERY_SORT_DESCENDING = "DESC",
   }
-
   enum QueryConditions {
     QUERY_EQUAL = "EQ",
     QUERY_NOTEQUAL = "NEQ",
@@ -214,42 +190,30 @@ declare namespace CbServer {
     QUERY_GREATERTHAN_EQUAL = "GTE",
     QUERY_LESSTHAN = "LT",
     QUERY_LESSTHAN_EQUAL = "LTE",
-    QUERY_MATCHES = "RE"
+    QUERY_MATCHES = "RE",
   }
-
-  type QueryValue = string | number | boolean;
-
+  type QueryValue = string | number | boolean | Date;
   interface QueryOptions {
     offset?: number;
     limit?: number;
   }
-
   interface QueryOptionsWithCollection
     extends CollectionOptionsWithCollection,
       QueryOptions {}
-
   interface QueryOptionsWithName
     extends CollectionOptionsWithName,
       QueryOptions {}
-
   interface QueryOptionsWithID extends CollectionOptionsWithID, QueryOptions {}
-
   interface Query {
     SELECTCOLUMNS?: string[];
     SORT?: QuerySortDirections;
-    FILTERS?: QueryFilter[];
+    FILTERS?: QueryFilter[][];
     PAGESIZE?: number;
     PAGENUM?: number;
   }
-
-  interface QueryFilter {
-    [QueryConditions: string]: QueryFilterValue;
-  }
-
-  interface QueryFilterValue {
-    [name: string]: QueryValue;
-  }
-
+  type QueryFilter = {
+    [key in QueryConditions]?: Array<Record<string, QueryValue>>;
+  };
   interface QueryObj {
     id: string;
     user: APIUser;
@@ -260,7 +224,6 @@ declare namespace CbServer {
     OR: Query[];
     offset: number;
     limit: number;
-
     ascending(field: string): QueryObj;
     descending(field: string): QueryObj;
     equalTo(field: string, value: QueryValue): QueryObj;
@@ -277,22 +240,17 @@ declare namespace CbServer {
     columns(columnsArray: string[]): QueryObj;
     remove(callback: CbCallback): QueryObj;
   }
-
   type ItemOptions = CollectionOptionsWithID;
-
   interface Item {
     data: object;
-
     save(): void;
     refresh(): void;
     destroy(): void;
   }
-
   interface Code {
     user: APIUser;
     systemKey: string;
     systemSecret: string;
-
     execute(
       name: string,
       params: object,
@@ -301,14 +259,11 @@ declare namespace CbServer {
     ): void;
     getAllServices(callback: CbCallback): void;
   }
-
   interface DeploymentOptions {}
-
   interface Deployment {
     user: APIUser;
     systemKey: string;
     systemSecret: string;
-
     create(
       name: string,
       description: string,
@@ -324,31 +279,26 @@ declare namespace CbServer {
     read(name: string, callback: CbCallback): void;
     readAll(query: QueryObj, callback: CbCallback): void;
   }
-
   interface AppUser {
     user: APIUser;
     URI: string;
     systemKey: string;
     systemSecret: string;
-
     getUser(callback: CbCallback): void;
     setUser(data: object, callback: CbCallback): void;
     setUsers(query: QueryObj, data: object, callback: CbCallback): void;
     allUsers(query: QueryObj, callback: CbCallback): void;
     count(query: QueryObj, callback: CbCallback): void;
   }
-
   type WaitForMessageCallback = (
     error: boolean,
     message: string,
     topic: string
   ) => void;
-
   interface Messaging {
     user: APIUser;
     systemKey: string;
     systemSecret: string;
-
     getMessageHistoryWithTimeFrame(
       topic: string,
       count: number,
@@ -391,27 +341,22 @@ declare namespace CbServer {
     ): void;
     cancelCBInterval(id: string, cb: CbCallback<string>): void;
   }
-
   interface MessagingOptions {}
-
   interface Device {
     URI: string;
     systemKey: string;
     systemSecret: string;
-
     fetch(query: Query, callback: CbCallback): void;
     update(query: Query, changes: object, callback: CbCallback): void;
     delete(query: Query, callback: CbCallback): void;
     create(newDevice: object, callback: CbCallback): void;
   }
-
   enum TriggerModule {
     DEVICE = "Device",
     Data = "Data",
     MESSAGING = "Messaging",
-    USER = "User"
+    USER = "User",
   }
-
   interface TriggerCreateOptions {
     system_key: string;
     name: string;
@@ -420,7 +365,6 @@ declare namespace CbServer {
     key_value_pairs: KeyValuePair[];
     service_name: string;
   }
-
   interface TriggerClass {
     Create(
       name: string,
@@ -429,7 +373,6 @@ declare namespace CbServer {
     ): void;
     Fetch(name: string, callback: CbCallback): void;
   }
-
   interface TimerCreateOptions {
     description?: string;
     start_time?: Date;
@@ -439,7 +382,6 @@ declare namespace CbServer {
     user_id?: string;
     user_token?: string;
   }
-
   interface TimerClass {
     Create(
       name: string,
@@ -448,23 +390,18 @@ declare namespace CbServer {
     ): void;
     Fetch(name: string, callback: CbCallback): void;
   }
-
   interface TriggerInstance {
     name: string;
     systemKey: string;
-
     Update(options: object, callback: CbCallback): void;
     Delete(callback: CbCallback): void;
   }
-
   interface TimerInstance {
     name: string;
     systemKey: string;
-
     Update(options: object, callback: CbCallback): void;
     Delete(callback: CbCallback): void;
   }
-
   interface Cache<T = unknown> {
     get(key: string, cb: CbCallback<T>): void;
     set(key: string, val: T, cb: CbCallback<string>): void;
@@ -475,6 +412,5 @@ declare namespace CbServer {
     flush(cb: CbCallback<string>): void;
   }
 }
-
 // eslint-disable-next-line no-var
 declare var ClearBlade: CbServer.ClearBladeGlobal;
