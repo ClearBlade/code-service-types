@@ -164,10 +164,8 @@ declare namespace CbServer {
     addColumn(options: object, callback: CbCallback): void;
     dropColumn(name: string, callback: CbCallback): void;
     deleteCollection(callback: CbCallback): void;
-    fetch(
-      query: QueryObj | CbCallback<CollectionFetchData<T>>,
-      callback: CbCallback<CollectionFetchData<T>>
-    ): void;
+    fetch(query: QueryObj, callback: CbCallback<CollectionFetchData<T>>): void;
+    fetch(callback: CbCallback<CollectionFetchData<T>>): void;
     create(
       newItem: Partial<T> | Array<Partial<T>>,
       callback: CbCallback<CollectionSchema[]>
