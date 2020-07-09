@@ -136,6 +136,7 @@ declare namespace CbServer {
     getDeviceByName(name: string, callback: CbCallback): void;
     getAllDevicesForSystem(callback: CbCallback): void;
     validateEmailPassword(email: string, password: string): void;
+    Database(options?: { externalDBName: string }): Database;
   }
   interface CollectionOptionsWithCollection {
     collection: string;
@@ -411,6 +412,16 @@ declare namespace CbServer {
     delete(key: string, cb: CbCallback<string>): void;
     flush(cb: CbCallback<string>): void;
   }
+
+  interface Database {
+    query<T extends object>(command: string, cb: CbCallback<T[]>): void;
+    exec(command: string, cb: CbCallback<null>): void;
+    performOperation<T>(cb: CbCallback<T>, command: string): void;
+    performOperation<T>(cb: CbCallback<T>, ...commands: unknown[]): void;
+    performOperationAsync<T>(cb: CbCallback<T>, command: string): void;
+    performOperationAsync<T>(cb: CbCallback<T>, ...commands: unknown[]): void;
+  }
 }
+
 // eslint-disable-next-line no-var
 declare var ClearBlade: CbServer.ClearBladeGlobal;
