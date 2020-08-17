@@ -8,7 +8,7 @@ declare namespace CbServer {
     T = {
       [id: string]: unknown;
     }
-  > {
+    > {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: Query };
     readonly systemKey: string;
@@ -63,6 +63,7 @@ declare namespace CbServer {
     user: APIUser;
   }
   interface ClearBladeInt {
+    URI: string;
     Trigger: TriggerClass;
     Timer: TimerClass;
     about(): string;
@@ -200,11 +201,11 @@ declare namespace CbServer {
   }
   interface QueryOptionsWithCollection
     extends CollectionOptionsWithCollection,
-      QueryOptions {}
+    QueryOptions { }
   interface QueryOptionsWithName
     extends CollectionOptionsWithName,
-      QueryOptions {}
-  interface QueryOptionsWithID extends CollectionOptionsWithID, QueryOptions {}
+    QueryOptions { }
+  interface QueryOptionsWithID extends CollectionOptionsWithID, QueryOptions { }
   interface Query {
     SELECTCOLUMNS?: string[];
     SORT?: QuerySortDirections;
@@ -260,7 +261,7 @@ declare namespace CbServer {
     ): void;
     getAllServices(callback: CbCallback): void;
   }
-  interface DeploymentOptions {}
+  interface DeploymentOptions { }
   interface Deployment {
     user: APIUser;
     systemKey: string;
@@ -342,7 +343,7 @@ declare namespace CbServer {
     ): void;
     cancelCBInterval(id: string, cb: CbCallback<string>): void;
   }
-  interface MessagingOptions {}
+  interface MessagingOptions { }
   interface Device {
     URI: string;
     systemKey: string;
