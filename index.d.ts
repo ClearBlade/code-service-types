@@ -289,7 +289,7 @@ declare namespace CbServer {
     getUser(callback: CbCallback): void;
     setUser(data: object, callback: CbCallback): void;
     setUsers(query: QueryObj, data: object, callback: CbCallback): void;
-    allUsers(query: QueryObj, callback: CbCallback): void;
+    allUsers<T>(query: QueryObj, callback: CbCallback<T>): void;
     count(query: QueryObj, callback: CbCallback): void;
   }
   type WaitForMessageCallback = (
