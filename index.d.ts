@@ -422,7 +422,69 @@ declare namespace CbServer {
     performOperationAsync<T>(cb: CbCallback<T>, command: string): void;
     performOperationAsync<T>(cb: CbCallback<T>, ...commands: unknown[]): void;
   }
+
+  interface ClearBladeAsync {
+    Collection<T extends object>(
+      options:
+        | string
+        | CollectionOptionsWithName
+        | CollectionOptionsWithID
+        | CollectionOptionsWithCollection,
+    ): CollectionAsync<T>;
+    Query(
+      options?: QueryOptionsWithCollection | QueryOptionsWithName | QueryOptionsWithID,
+    ): QueryObj;
+    newCollection(name: string): Promise<unknown>;
+  }
+  interface CollectionAsync<T extends object> {
+    deleteCollection(): Promise<unknown>;
+    dropColumn(columnName: string): Promise<unknown>;
+    addColumn(columnMeta: ColumnMeta): Promise<unknown>;
+    columns(): Promise<unknown>;
+    remove(query: QueryObj): Promise<unknown>;
+    update(query: QueryObj, changes: object): Promise<unknown>;
+    create(newItem: Partial<T> | Array<Partial<T>>): Promise<unknown>;
+    fetch(query: QueryObj): Promise<CollectionFetchData>;
+  }
+  interface ColumnMeta {
+    name: string;
+    type: string;
+  }
+
+  interface MQTT {
+    Client: MQTTClient;
+    Message(payload: string): MQTTMessage;
+  }
+  interface MQTTClientOptions {
+    address: string;
+    port: number;
+    username: string;
+    password: string;
+    client_id: string;
+    use_tls: boolean;
+    tls_config: TLSConfig;
+  }
+  interface TLSConfig {
+    client_cert: string;
+    client_key: string;
+    ca_cert: string;
+  }
+  interface MQTTMessage {
+    payload: string;
+    qos: number;
+    retain: boolean;
+    duplicate: boolean;
+  }
+  interface MQTTClient {
+    new(options?: MQTTClientOptions): {
+      subscribe(topic: string, onMessage: (topic: string, message: MQTTMessage) => void): Promise<unknown>;
+      publish(topic: string, payload: string | MQTTMessage, qos?: number, retain?: boolean): Promise<unknown>;
+    };
+  }
 }
 
-// eslint-disable-next-line no-var
+/* eslint-disable no-var */
 declare var ClearBlade: CbServer.ClearBladeGlobal;
+declare var ClearBladeAsync: CbServer.ClearBladeAsync;
+declare var MQTT: CbServer.MQTT;
+/* eslint-enable no-var */
