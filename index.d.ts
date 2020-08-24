@@ -476,7 +476,7 @@ declare namespace CbServer {
     duplicate: boolean;
   }
   interface MQTTClientConstructor {
-    new(options?: MQTTClientOptions): MQTTClient
+    new(options?: MQTTClientOptions): MQTTClient;
   }
   interface MQTTClient {
     subscribe(topic: string, onMessage: (topic: string, message: MQTTMessage) => void): Promise<unknown>;
