@@ -452,7 +452,7 @@ declare namespace CbServer {
   }
 
   interface MQTT {
-    Client: MQTTClient;
+    Client: MQTTClientConstructor;
     Message(payload: string): MQTTMessage;
   }
   interface MQTTClientOptions {
@@ -475,11 +475,12 @@ declare namespace CbServer {
     retain: boolean;
     duplicate: boolean;
   }
+  interface MQTTClientConstructor {
+    new(options?: MQTTClientOptions): MQTTClient
+  }
   interface MQTTClient {
-    new(options?: MQTTClientOptions): {
-      subscribe(topic: string, onMessage: (topic: string, message: MQTTMessage) => void): Promise<unknown>;
-      publish(topic: string, payload: string | MQTTMessage, qos?: number, retain?: boolean): Promise<unknown>;
-    };
+    subscribe(topic: string, onMessage: (topic: string, message: MQTTMessage) => void): Promise<unknown>;
+    publish(topic: string, payload: string | MQTTMessage, qos?: number, retain?: boolean): Promise<unknown>;
   }
 }
 
