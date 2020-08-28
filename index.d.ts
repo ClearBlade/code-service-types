@@ -443,14 +443,14 @@ declare namespace CbServer {
       name: string;
       type: string;
     }): Promise<string>;
-    columns(): Promise<{
+    columns(): Promise<Array<{
       ColumnName: string;
       ColumnType: string;
       PK: boolean;
-    }[]>;
+    }>>;
     remove(query: QueryObj): Promise<string>;
-    update(query: QueryObj, changes: object): Promise<CollectionSchema<T>[]>;
-    create(newItem: Partial<T> | Array<Partial<T>>): Promise<{ item_id: string }[]>;
+    update(query: QueryObj, changes: object): Promise<Array<CollectionSchema<T>>>;
+    create(newItem: Partial<T> | Array<Partial<T>>): Promise<Array<{ item_id: string }>>;
     fetch(query: QueryObj): Promise<CollectionFetchData<T>>;
   }
 
