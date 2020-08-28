@@ -434,21 +434,24 @@ declare namespace CbServer {
     Query(
       options?: QueryOptionsWithCollection | QueryOptionsWithName | QueryOptionsWithID,
     ): QueryObj;
-    newCollection(name: string): Promise<unknown>;
+    newCollection(name: string): Promise<{ id: string, name: string }>;
   }
   interface CollectionAsync<T extends object> {
-    deleteCollection(): Promise<unknown>;
-    dropColumn(columnName: string): Promise<unknown>;
-    addColumn(columnMeta: ColumnMeta): Promise<unknown>;
-    columns(): Promise<unknown>;
-    remove(query: QueryObj): Promise<unknown>;
-    update(query: QueryObj, changes: object): Promise<unknown>;
-    create(newItem: Partial<T> | Array<Partial<T>>): Promise<unknown>;
-    fetch(query: QueryObj): Promise<CollectionFetchData>;
-  }
-  interface ColumnMeta {
-    name: string;
-    type: string;
+    deleteCollection(): Promise<string>;
+    dropColumn(columnName: string): Promise<string>;
+    addColumn(columnMeta: {
+      name: string;
+      type: string;
+    }): Promise<string>;
+    columns(): Promise<{
+      ColumnName: string;
+      ColumnType: string;
+      PK: boolean;
+    }[]>;
+    remove(query: QueryObj): Promise<string>;
+    update(query: QueryObj, changes: object): Promise<CollectionSchema<T>[]>;
+    create(newItem: Partial<T> | Array<Partial<T>>): Promise<{ item_id: string }[]>;
+    fetch(query: QueryObj): Promise<CollectionFetchData<T>>;
   }
 
   interface MQTT {
