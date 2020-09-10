@@ -8,7 +8,7 @@ declare namespace CbServer {
     T = {
       [id: string]: unknown;
     }
-    > {
+  > {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: Query };
     readonly systemKey: string;
@@ -67,15 +67,15 @@ declare namespace CbServer {
     Trigger: TriggerClass;
     Timer: TimerClass;
     about(): string;
-    addToQuery(queryObj: QueryObj, key: string, value: string): void;
+    addToQuery(queryObj: IPlatformQuery, key: string, value: string): void;
     addFilterToQuery(
-      queryObj: QueryObj,
+      queryObj: IPlatformQuery,
       condition: QueryConditions,
       key: string,
       value: QueryValue
     ): void;
     addSortToQuery(
-      queryObj: QueryObj,
+      queryObj: IPlatformQuery,
       direction: QuerySortDirections,
       column: string
     ): void;
@@ -110,9 +110,9 @@ declare namespace CbServer {
         | QueryOptionsWithCollection
         | QueryOptionsWithName
         | QueryOptionsWithID
-    ): QueryObj;
+    ): IPlatformQuery;
     parseOperationQuery(query: Query): string;
-    parseQuery(query: Query | QueryObj): string;
+    parseQuery(query: Query | IPlatformQuery): string;
     registerUser(email: string, password: string, callback: CbCallback): void;
     setUser(email: string, authToken: string, userId: string): void;
     User(): AppUser;
@@ -166,20 +166,23 @@ declare namespace CbServer {
     addColumn(options: object, callback: CbCallback): void;
     dropColumn(name: string, callback: CbCallback): void;
     deleteCollection(callback: CbCallback): void;
-    fetch(query: QueryObj, callback: CbCallback<CollectionFetchData<T>>): void;
+    fetch(
+      query: IPlatformQuery,
+      callback: CbCallback<CollectionFetchData<T>>
+    ): void;
     fetch(callback: CbCallback<CollectionFetchData<T>>): void;
     create(
       newItem: Partial<T> | Array<Partial<T>>,
       callback: CbCallback<CollectionSchema[]>
     ): void;
     update(
-      query: QueryObj,
+      query: IPlatformQuery,
       changes: object,
       callback: CbCallback<"success">
     ): void;
-    remove(query: QueryObj, callback: CbCallback): void;
+    remove(query: IPlatformQuery, callback: CbCallback): void;
     columns(callback: CbCallback): void;
-    count(query: QueryObj, callback: CbCallback): void;
+    count(query: IPlatformQuery, callback: CbCallback): void;
   }
   enum QuerySortDirections {
     QUERY_SORT_ASCENDING = "ASC",
@@ -201,46 +204,56 @@ declare namespace CbServer {
   }
   interface QueryOptionsWithCollection
     extends CollectionOptionsWithCollection,
-    QueryOptions { }
+      QueryOptions {}
   interface QueryOptionsWithName
     extends CollectionOptionsWithName,
-    QueryOptions { }
-  interface QueryOptionsWithID extends CollectionOptionsWithID, QueryOptions { }
+      QueryOptions {}
+  interface QueryOptionsWithID extends CollectionOptionsWithID, QueryOptions {}
   interface Query {
-    SELECTCOLUMNS?: string[];
-    SORT?: QuerySortDirections;
-    FILTERS?: QueryFilter[][];
-    PAGESIZE?: number;
-    PAGENUM?: number;
+    Operator: string;
+    Field: string;
+    Value: unknown;
   }
-  type QueryFilter = {
-    [key in QueryConditions]?: Array<Record<string, QueryValue>>;
-  };
-  interface QueryObj {
-    id: string;
+
+  interface PlatformQueryState {
+    PrimaryKey: string[];
+    Order: { SortOrder: boolean; OrderKey: string }[];
+    PageSize: number;
+    PageNumber: number;
+    Queries: Query[][];
+    Columns: string[];
+    Distinct: string;
+    GroupBy: [];
+    RawQuery: string;
+  }
+  interface IPlatformQuery {
     user: APIUser;
+    collectionNameOrID: string;
     URI: string;
     systemKey: string;
     systemSecret: string;
-    query: Query;
-    OR: Query[];
-    offset: number;
-    limit: number;
-    ascending(field: string): QueryObj;
-    descending(field: string): QueryObj;
-    equalTo(field: string, value: QueryValue): QueryObj;
-    greaterThan(field: string, value: QueryValue): QueryObj;
-    greaterThanEqualTo(field: string, value: QueryValue): QueryObj;
-    lessThan(field: string, value: QueryValue): QueryObj;
-    lessThanEqualTo(field: string, value: QueryValue): QueryObj;
-    notEqualTo(field: string, value: QueryValue): QueryObj;
-    matches(field: string, pattern: QueryValue): QueryObj;
-    or(query: QueryObj): QueryObj;
-    setPage(pageSize: number, pageNum: number): QueryObj;
-    fetch<T = {}>(callback: CbCallback<CollectionFetchData<T>>): QueryObj;
-    update(changes: object, callback: CbCallback): QueryObj;
-    columns(columnsArray: string[]): QueryObj;
-    remove(callback: CbCallback): QueryObj;
+    query: PlatformQueryState;
+    andFilter: (
+      Operator: string,
+      Field: string,
+      Value: QueryValue
+    ) => IPlatformQuery;
+    or: (q: IPlatformQuery) => IPlatformQuery;
+    columns: (columns: string[]) => IPlatformQuery;
+    ascending: (field: string) => IPlatformQuery;
+    descending: (field: string) => IPlatformQuery;
+    equalTo: (field: string, value: QueryValue) => IPlatformQuery;
+    greaterThan: (field: string, value: QueryValue) => IPlatformQuery;
+    greaterThanEqualTo: (field: string, value: QueryValue) => IPlatformQuery;
+    lessThan: (field: string, value: QueryValue) => IPlatformQuery;
+    lessThanEqualTo: (field: string, value: QueryValue) => IPlatformQuery;
+    notEqualTo: (field: string, value: QueryValue) => IPlatformQuery;
+    matches: (field: string, pattern: string) => IPlatformQuery;
+    setPage: (pageSize: number, pageNum: number) => IPlatformQuery;
+    rawQuery: (rawQuery: string) => IPlatformQuery;
+    fetch<T = {}>(callback: CbCallback<CollectionFetchData<T>>): IPlatformQuery;
+    update(changes: object, callback: CbCallback): IPlatformQuery;
+    remove(callback: CbCallback): IPlatformQuery;
   }
   type ItemOptions = CollectionOptionsWithID;
   interface Item {
@@ -261,7 +274,7 @@ declare namespace CbServer {
     ): void;
     getAllServices(callback: CbCallback): void;
   }
-  interface DeploymentOptions { }
+  interface DeploymentOptions {}
   interface Deployment {
     user: APIUser;
     systemKey: string;
@@ -279,7 +292,7 @@ declare namespace CbServer {
     ): void;
     delete(name: string, callback: CbCallback): void;
     read(name: string, callback: CbCallback): void;
-    readAll(query: QueryObj, callback: CbCallback): void;
+    readAll(query: IPlatformQuery, callback: CbCallback): void;
   }
   interface AppUser {
     user: APIUser;
@@ -288,9 +301,9 @@ declare namespace CbServer {
     systemSecret: string;
     getUser(callback: CbCallback): void;
     setUser(data: object, callback: CbCallback): void;
-    setUsers(query: QueryObj, data: object, callback: CbCallback): void;
-    allUsers<T>(query: QueryObj, callback: CbCallback<T>): void;
-    count(query: QueryObj, callback: CbCallback): void;
+    setUsers(query: IPlatformQuery, data: object, callback: CbCallback): void;
+    allUsers<T>(query: IPlatformQuery, callback: CbCallback<T>): void;
+    count(query: IPlatformQuery, callback: CbCallback): void;
   }
   type WaitForMessageCallback = (
     error: boolean,
@@ -343,7 +356,7 @@ declare namespace CbServer {
     ): void;
     cancelCBInterval(id: string, cb: CbCallback<string>): void;
   }
-  interface MessagingOptions { }
+  interface MessagingOptions {}
   interface Device {
     URI: string;
     systemKey: string;
@@ -429,29 +442,36 @@ declare namespace CbServer {
         | string
         | CollectionOptionsWithName
         | CollectionOptionsWithID
-        | CollectionOptionsWithCollection,
+        | CollectionOptionsWithCollection
     ): CollectionAsync<T>;
     Query(
-      options?: QueryOptionsWithCollection | QueryOptionsWithName | QueryOptionsWithID,
-    ): QueryObj;
-    newCollection(name: string): Promise<{ id: string, name: string }>;
+      options?:
+        | QueryOptionsWithCollection
+        | QueryOptionsWithName
+        | QueryOptionsWithID
+    ): IPlatformQuery;
+    newCollection(name: string): Promise<{ id: string; name: string }>;
   }
   interface CollectionAsync<T extends object> {
     deleteCollection(): Promise<string>;
     dropColumn(columnName: string): Promise<string>;
-    addColumn(columnMeta: {
-      name: string;
-      type: string;
-    }): Promise<string>;
-    columns(): Promise<Array<{
-      ColumnName: string;
-      ColumnType: string;
-      PK: boolean;
-    }>>;
-    remove(query: QueryObj): Promise<string>;
-    update(query: QueryObj, changes: object): Promise<Array<CollectionSchema<T>>>;
-    create(newItem: Partial<T> | Array<Partial<T>>): Promise<Array<{ item_id: string }>>;
-    fetch(query: QueryObj): Promise<CollectionFetchData<T>>;
+    addColumn(columnMeta: { name: string; type: string }): Promise<string>;
+    columns(): Promise<
+      Array<{
+        ColumnName: string;
+        ColumnType: string;
+        PK: boolean;
+      }>
+    >;
+    remove(query: IPlatformQuery): Promise<string>;
+    update(
+      query: IPlatformQuery,
+      changes: object
+    ): Promise<Array<CollectionSchema<T>>>;
+    create(
+      newItem: Partial<T> | Array<Partial<T>>
+    ): Promise<Array<{ item_id: string }>>;
+    fetch(query: IPlatformQuery): Promise<CollectionFetchData<T>>;
   }
 
   interface MQTT {
@@ -479,11 +499,19 @@ declare namespace CbServer {
     duplicate: boolean;
   }
   interface MQTTClientConstructor {
-    new(options?: MQTTClientOptions): MQTTClient;
+    new (options?: MQTTClientOptions): MQTTClient;
   }
   interface MQTTClient {
-    subscribe(topic: string, onMessage: (topic: string, message: MQTTMessage) => void): Promise<unknown>;
-    publish(topic: string, payload: string | MQTTMessage, qos?: number, retain?: boolean): Promise<unknown>;
+    subscribe(
+      topic: string,
+      onMessage: (topic: string, message: MQTTMessage) => void
+    ): Promise<unknown>;
+    publish(
+      topic: string,
+      payload: string | MQTTMessage,
+      qos?: number,
+      retain?: boolean
+    ): Promise<unknown>;
   }
 }
 
