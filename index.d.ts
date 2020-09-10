@@ -5,9 +5,7 @@
 // Minimum TypeScript Version: 3.0
 declare namespace CbServer {
   interface BasicReq<
-    T = {
-      [id: string]: unknown;
-    }
+    T = {}
   > {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: Query };
@@ -183,7 +181,7 @@ declare namespace CbServer {
     ): void;
     remove(query: IPlatformQuery, callback: CbCallback): void;
     columns(callback: CbCallback): void;
-    count(query: IPlatformQuery, callback: CbCallback): void;
+    count(query: IPlatformQuery, callback: CbCallback<{ count: number }>): void;
   }
   enum QuerySortDirections {
     QUERY_SORT_ASCENDING = "ASC",
@@ -304,7 +302,7 @@ declare namespace CbServer {
     setUser(data: object, callback: CbCallback): void;
     setUsers(query: IPlatformQuery, data: object, callback: CbCallback): void;
     allUsers<T>(query: IPlatformQuery, callback: CbCallback<T>): void;
-    count(query: IPlatformQuery, callback: CbCallback): void;
+    count(query: IPlatformQuery, callback: CbCallback<{ count: number }>): void;
   }
   type WaitForMessageCallback = (
     error: boolean,
