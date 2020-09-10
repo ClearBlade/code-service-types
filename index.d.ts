@@ -58,7 +58,7 @@ declare namespace CbServer {
   interface KeyValuePair {
     [key: string]: unknown;
   }
-  type CbCallback<T = Resp> = (error: boolean, response: T) => void;
+  type CbCallback<T = unknown> = (error: boolean, response: T) => void;
   interface ClearBladeGlobal extends ClearBladeInt {
     user: APIUser;
   }
@@ -138,6 +138,7 @@ declare namespace CbServer {
     getAllDevicesForSystem(callback: CbCallback): void;
     validateEmailPassword(email: string, password: string): void;
     Database(options?: { externalDBName: string }): Database;
+    Roles(): Roles;
   }
   interface CollectionOptionsWithCollection {
     collection: string;
@@ -434,6 +435,16 @@ declare namespace CbServer {
     performOperation<T>(cb: CbCallback<T>, ...commands: unknown[]): void;
     performOperationAsync<T>(cb: CbCallback<T>, command: string): void;
     performOperationAsync<T>(cb: CbCallback<T>, ...commands: unknown[]): void;
+  }
+
+  interface Role {
+    description: string;
+    name: string;
+    role_id: string;
+  }
+
+  interface Roles {
+    get(q: IPlatformQuery, cb: CbCallback<Role[]>): void;
   }
 
   interface ClearBladeAsync {
