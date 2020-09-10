@@ -3,7 +3,7 @@
 // Definitions by: Jim Bouquet <https://github.com/ClearBlade>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-const genericCallback = (error: boolean, response: CbServer.Resp) => {};
+const genericCallback = (error: boolean, response: unknown) => {};
 
 ///////////////////////////////////////
 // ClearBlade object API invocations
@@ -11,23 +11,25 @@ const genericCallback = (error: boolean, response: CbServer.Resp) => {};
 ClearBlade.init({
   systemKey: "abcdef",
   systemSecret: "abcdefg",
-  callback: genericCallback
+  callback: genericCallback,
 });
 
+const req: CbServer.BasicReq<{ param1: string; param2: number }> = {
+  isLogging: false,
+  params: {
+    param1: "1",
+    param2: 2,
+  },
+  systemKey: "abcdef",
+  systemSecret: "abcdef",
+  userEmail: "test@test.com",
+  userToken: "abcdef",
+  userid: "abcdef",
+  service_instance_id: "abcdef",
+};
+
 ClearBlade.init({
-  request: {
-    isLogging: false,
-    params: {
-      param1: "1",
-      param2: 2
-    },
-    systemKey: "abcdef",
-    systemSecret: "abcdef",
-    userEmail: "test@test.com",
-    userToken: "abcdef",
-    userid: "abcdef",
-    service_instance_id: "abcdef"
-  }
+  request: req,
 });
 
 const about = ClearBlade.about();
@@ -80,10 +82,6 @@ ClearBlade.addFilterToQuery(
 );
 
 ClearBlade.newCollection("collectionName", genericCallback);
-
-const parseOperation = ClearBlade.parseOperationQuery(query1.query);
-const parseQuery1 = ClearBlade.parseQuery(query1);
-const parseQuery2 = ClearBlade.parseQuery(query1.query);
 
 ClearBlade.createDevice(
   "devicename",
@@ -200,9 +198,9 @@ messaging.publish("topic", "payload");
 ///////////////////////////////////////
 // Device API invocations
 ///////////////////////////////////////
-device.fetch(query1.query, genericCallback);
-device.update(query1.query, { object: Object }, genericCallback);
-device.delete(query1.query, genericCallback);
+device.fetch(query1, genericCallback);
+device.update(query1, { object: Object }, genericCallback);
+device.delete(query1, genericCallback);
 device.create({ newDevice: Object }, genericCallback);
 
 ///////////////////////////////////////
@@ -216,7 +214,7 @@ ClearBlade.Trigger.Create(
     def_module: CbServer.TriggerModule.DEVICE,
     def_name: "someName",
     key_value_pairs: [],
-    service_name: "ServiceName"
+    service_name: "ServiceName",
   },
   genericCallback
 );
