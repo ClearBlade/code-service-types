@@ -6,7 +6,7 @@
 declare namespace CbServer {
   interface BasicReq<T = {}> {
     readonly isLogging: boolean;
-    readonly params: T & { trigger?: string; query?: Query };
+    readonly params: T & { trigger?: string; query?: TriggerQuery };
     readonly systemKey: string;
     readonly systemSecret: string;
     readonly userEmail: string;
@@ -193,6 +193,17 @@ declare namespace CbServer {
     QUERY_MATCHES = "RE",
   }
   type QueryValue = string | number | boolean | Date;
+
+  interface TriggerQuery {
+    SELECTCOLUMNS?: string[];
+    SORT?: QuerySortDirections;
+    FILTERS?: TriggerQueryFilter[][];
+    PAGESIZE?: number;
+    PAGENUM?: number;
+  }
+  type TriggerQueryFilter = {
+    [key in QueryConditions]?: Array<Record<string, QueryValue>>;
+  };
   interface QueryOptions {
     offset?: number;
     limit?: number;
