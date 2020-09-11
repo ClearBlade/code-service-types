@@ -140,7 +140,7 @@ query1.notEqualTo("string", "string");
 query1.matches("string", ".*");
 query1.or(query2);
 query1.setPage(1, 1);
-query1.fetch(genericCallback);
+query1.fetch((err: boolean, resp: CbServer.CollectionFetchData) => undefined);
 query1.update({}, genericCallback);
 query1.columns([]);
 query1.remove(genericCallback);
