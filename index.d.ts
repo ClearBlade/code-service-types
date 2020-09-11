@@ -151,7 +151,7 @@ declare namespace CbServer {
   type CollectionSchema<T extends {} = {}> = T & {
     item_id: string;
   };
-  type CollectionFetchData<T extends {} = {}> = T & {
+  type CollectionFetchData<T extends {} = {}> = {
     DATA: Array<CollectionSchema<T>>;
     CURRENTPAGE: number;
     NEXTPAGEURL: string | null;
