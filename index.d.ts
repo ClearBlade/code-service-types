@@ -151,13 +151,13 @@ declare namespace CbServer {
   type CollectionSchema<T extends {} = {}> = T & {
     item_id: string;
   };
-  type CollectionFetchData<T extends {} = {}> = {
+  interface CollectionFetchData<T extends {} = {}> {
     DATA: Array<CollectionSchema<T>>;
     CURRENTPAGE: number;
     NEXTPAGEURL: string | null;
     PREVPAGEURL: string | null;
     TOTAL: number;
-  };
+  }
   interface Collection<T extends object> {
     user: APIUser;
     URI: string;
