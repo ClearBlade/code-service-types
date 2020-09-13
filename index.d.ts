@@ -305,7 +305,7 @@ declare namespace CbServer {
     URI: string;
     systemKey: string;
     systemSecret: string;
-    getUser(callback: CbCallback): void;
+    getUser<T>(callback: CbCallback<T>): void;
     setUser(data: object, callback: CbCallback): void;
     setUsers(query: PlatformQuery, data: object, callback: CbCallback): void;
     allUsers<T>(query: PlatformQuery, callback: CbCallback<T>): void;
