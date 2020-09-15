@@ -192,7 +192,15 @@ declare namespace CbServer {
     QUERY_LESSTHAN_EQUAL = "LTE",
     QUERY_MATCHES = "RE",
   }
-  type QueryValue = string | number | boolean | Date;
+  type QueryValue =
+    | string
+    | number
+    | boolean
+    | Date
+    | string[]
+    | number[]
+    | boolean[]
+    | Date[];
 
   interface TriggerQuery {
     SELECTCOLUMNS?: string[];
@@ -232,13 +240,15 @@ declare namespace CbServer {
     GroupBy: [];
     RawQuery: string;
   }
-  interface PlatformQuery {
+  interface SerializablePlatformQuery {
+    query: PlatformQueryState;
+  }
+  interface PlatformQuery extends SerializablePlatformQuery {
     user: APIUser;
     collectionNameOrID: string;
     URI: string;
     systemKey: string;
     systemSecret: string;
-    query: PlatformQueryState;
     andFilter: (
       Operator: string,
       Field: string,
