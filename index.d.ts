@@ -498,6 +498,7 @@ declare namespace CbServer {
       newItem: Partial<T> | Array<Partial<T>>
     ): Promise<Array<{ item_id: string }>>;
     fetch(query: PlatformQuery): Promise<CollectionFetchData<T>>;
+    count(query: PlatformQuery): Promise<{ count: number }>;
   }
 
   interface MQTT {
