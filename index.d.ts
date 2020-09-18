@@ -540,10 +540,33 @@ declare namespace CbServer {
       retain?: boolean
     ): Promise<unknown>;
   }
+
+  interface HttpReqObj {
+    get(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
+    post(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
+    put(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
+    delete(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
+  }
+  interface HTTPClientOptions {
+    uri: string;
+    qs?: Record<string, unknown>;
+    body?: Record<string, unknown>;
+    form?: boolean;
+    headers?: Record<string, unknown>;
+    followRedirect?: number;
+    timeout?: number; // timeout in seconds
+    auth?: { user: string; pass: string };
+    strictSSL?: boolean;
+    getProxyUrl?: boolean;
+    isXML?: boolean;
+    isSoap?: boolean;
+    full?: boolean;
+  }
 }
 
 /* eslint-disable no-var */
 declare var ClearBlade: CbServer.ClearBladeGlobal;
 declare var ClearBladeAsync: CbServer.ClearBladeAsync;
 declare var MQTT: CbServer.MQTT;
+declare var Requests: () => CbServer.HttpReqObj;
 /* eslint-enable no-var */
