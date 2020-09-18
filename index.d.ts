@@ -541,6 +541,7 @@ declare namespace CbServer {
     ): Promise<unknown>;
   }
 
+  // docs: https://github.com/ClearBlade/native-libraries/blob/master/http.md
   interface HttpReqObj {
     get(options: HTTPClientOptions, callback: CbCallback): void;
     post(options: HTTPClientOptions, callback: CbCallback): void;
