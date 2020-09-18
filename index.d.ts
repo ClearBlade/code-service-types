@@ -542,10 +542,10 @@ declare namespace CbServer {
   }
 
   interface HttpReqObj {
-    get(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
-    post(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
-    put(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
-    delete(options: HTTPClientOptions, callback: CbCallback<unknown>): void;
+    get(options: HTTPClientOptions, callback: CbCallback): void;
+    post(options: HTTPClientOptions, callback: CbCallback): void;
+    put(options: HTTPClientOptions, callback: CbCallback): void;
+    delete(options: HTTPClientOptions, callback: CbCallback): void;
   }
   interface HTTPClientOptions {
     uri: string;
@@ -568,5 +568,5 @@ declare namespace CbServer {
 declare var ClearBlade: CbServer.ClearBladeGlobal;
 declare var ClearBladeAsync: CbServer.ClearBladeAsync;
 declare var MQTT: CbServer.MQTT;
-declare var Requests: () => CbServer.HttpReqObj;
+declare function Requests(): CbServer.HttpReqObj;
 /* eslint-enable no-var */
