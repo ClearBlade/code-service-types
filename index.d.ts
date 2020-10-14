@@ -499,6 +499,9 @@ declare namespace CbServer {
     ): Promise<Array<{ item_id: string }>>;
     fetch(query: PlatformQuery): Promise<CollectionFetchData<T>>;
     count(query: PlatformQuery): Promise<{ count: number }>;
+    createIndex(columnName: string): Promise<string>;
+    createUniqueIndex(columnName: string): Promise<string>;
+    upsert(changes: Partial<T>, uniquelyIndexedColumn: string): Promise<CollectionFetchData<T>>;
   }
 
   interface MQTT {
