@@ -94,6 +94,7 @@ declare namespace CbServer {
     isCurrentUserAuthenticated(callback: CbCallback): void;
     isObjectEmpty(obj: object): boolean;
     Item(data: object, options: string | ItemOptions): Item;
+    Lock(lockName: string, streamServiceIdentifier: string): Lock;
     logger(message: string): void;
     loginAnon(callback: CbCallback): void;
     loginUser(email: string, password: string, callback: CbCallback): void;
@@ -460,6 +461,13 @@ declare namespace CbServer {
 
   interface Roles {
     get(q: PlatformQuery, cb: CbCallback<Role[]>): void;
+  }
+
+  interface Lock {
+    lock(callback?: (err: boolean, lockType: string) => void): void;
+    unlock(callback?: (err: boolean, lockType: string) => void): void;
+    rlock(callback?: (err: boolean, lockType: string) => void): void;
+    runlock(callback?: (err: boolean, lockType: string) => void): void;
   }
 
   interface ClearBladeAsync {
