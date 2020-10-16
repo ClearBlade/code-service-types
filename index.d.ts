@@ -16,9 +16,9 @@ declare namespace CbServer {
   }
   type ReqTypes = BasicReq;
   let req: ReqTypes;
-  interface Resp {
+  interface Resp<T extends { success?: unknown } = { success: unknown }> {
     error(msg: unknown): never;
-    success(msg: unknown): never;
+    success(msg: T["success"]): never;
     send(msg: unknown): never;
     set(headers: object): void;
     status(status_code: number): void;
@@ -509,7 +509,10 @@ declare namespace CbServer {
     count(query: PlatformQuery): Promise<{ count: number }>;
     createIndex(columnName: string): Promise<string>;
     createUniqueIndex(columnName: string): Promise<string>;
-    upsert(changes: Partial<T>, uniquelyIndexedColumn: string): Promise<Array<CollectionSchema<T>>>;
+    upsert(
+      changes: Partial<T>,
+      uniquelyIndexedColumn: string
+    ): Promise<Array<CollectionSchema<T>>>;
   }
 
   interface MQTT {
