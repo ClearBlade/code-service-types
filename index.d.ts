@@ -484,6 +484,7 @@ declare namespace CbServer {
         | QueryOptionsWithName
         | QueryOptionsWithID
     ): PlatformQuery;
+    Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
   }
   interface CollectionAsync<T extends object> {
@@ -550,6 +551,12 @@ declare namespace CbServer {
       qos?: number,
       retain?: boolean
     ): Promise<unknown>;
+  }
+  interface LockAsync {
+    lock(): Promise<unknown>;
+    unlock(): Promise<unknown>;
+    rlock(): Promise<unknown>;
+    runlock(): Promise<unknown>;
   }
 }
 
