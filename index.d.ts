@@ -470,6 +470,26 @@ declare namespace CbServer {
     runlock(callback?: (err: boolean, lockType: string) => void): void;
   }
 
+  interface AsyncPlatformQuery extends SerializablePlatformQuery {
+    andFilter: (
+      Operator: string,
+      Field: string,
+      Value: QueryValue
+    ) => AsyncPlatformQuery;
+    or: (q: AsyncPlatformQuery) => AsyncPlatformQuery;
+    equalTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    greaterThan: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    greaterThanEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    lessThan: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    lessThanEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    notEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    matches: (field: string, pattern: string) => AsyncPlatformQuery;
+    setPage: (pageSize: number, pageNum: number) => AsyncPlatformQuery;
+    columns: (columns: string[]) => AsyncPlatformQuery;
+    ascending: (field: string) => AsyncPlatformQuery;
+    descending: (field: string) => AsyncPlatformQuery;
+    rawQuery: (rawQuery: string) => AsyncPlatformQuery;
+  }
   interface ClearBladeAsync {
     Collection<T extends object>(
       options:
@@ -483,7 +503,7 @@ declare namespace CbServer {
         | QueryOptionsWithCollection
         | QueryOptionsWithName
         | QueryOptionsWithID
-    ): PlatformQuery;
+    ): AsyncPlatformQuery;
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
   }
@@ -498,16 +518,16 @@ declare namespace CbServer {
         PK: boolean;
       }>
     >;
-    remove(query: PlatformQuery): Promise<string>;
+    remove(query: AsyncPlatformQuery): Promise<string>;
     update(
-      query: PlatformQuery,
+      query: AsyncPlatformQuery,
       changes: object
     ): Promise<Array<CollectionSchema<T>>>;
     create(
       newItem: Partial<T> | Array<Partial<T>>
     ): Promise<Array<{ item_id: string }>>;
-    fetch(query: PlatformQuery): Promise<CollectionFetchData<T>>;
-    count(query: PlatformQuery): Promise<{ count: number }>;
+    fetch(query: AsyncPlatformQuery): Promise<CollectionFetchData<T>>;
+    count(query: AsyncPlatformQuery): Promise<{ count: number }>;
     createIndex(columnName: string): Promise<string>;
     createUniqueIndex(columnName: string): Promise<string>;
     upsert(changes: Partial<T>, uniquelyIndexedColumn: string): Promise<Array<CollectionSchema<T>>>;
