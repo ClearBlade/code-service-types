@@ -486,7 +486,16 @@ declare namespace CbServer {
     ): PlatformQuery;
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
+    Database(options?: { externalDBName: string }): DatabaseAsync;
   }
+
+  interface DatabaseAsync {
+    query(rawQuery: string): Promise<unknown[]>;
+    exec(rawQuery: string): Promise<{ count: number }>;
+    performOperation(command: string): Promise<unknown>;
+    performOperation(...commands: unknown[]): Promise<unknown>;
+  }
+
   interface CollectionAsync<T extends object> {
     deleteCollection(): Promise<string>;
     dropColumn(columnName: string): Promise<string>;
