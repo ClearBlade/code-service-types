@@ -4,6 +4,11 @@
 //                 Clark Bynum <https://github.com/ClearBlade>
 // Minimum TypeScript Version: 3.0
 declare namespace CbServer {
+  namespace CbServer.Column {
+    type Number = number | null;
+    type Timestamp = string | null;
+    type JsonB<JsonType> = JsonType | null;
+  }
   interface BasicReq<T = {}> {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: TriggerQuery };
@@ -593,12 +598,6 @@ declare namespace CbServer {
     rlock(): Promise<unknown>;
     runlock(): Promise<unknown>;
   }
-}
-
-declare namespace CbServer.Column {
-  type Number = number | null;
-  type Timestamp = string | null;
-  type JsonB<JsonType> = JsonType | null;
 }
 
 /* eslint-disable no-var */
