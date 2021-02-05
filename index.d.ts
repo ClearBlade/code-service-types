@@ -4,7 +4,7 @@
 //                 Clark Bynum <https://github.com/ClearBlade>
 // Minimum TypeScript Version: 3.0
 declare namespace CbServer {
-  namespace CbServer.Column {
+  namespace ColumnTypes {
     type Number = number | null;
     type Timestamp = string | null;
     type JsonB<JsonType> = JsonType | null;
