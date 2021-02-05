@@ -9,6 +9,10 @@ declare namespace CbServer {
     type Timestamp = string | null;
     type JsonB<JsonType> = JsonType | null;
   }
+
+  interface CollectionItem {
+    item_id: string;
+  }
   interface BasicReq<T = {}> {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: TriggerQuery };
