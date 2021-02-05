@@ -479,7 +479,10 @@ declare namespace CbServer {
     or: (q: AsyncPlatformQuery) => AsyncPlatformQuery;
     equalTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
     greaterThan: (field: string, value: QueryValue) => AsyncPlatformQuery;
-    greaterThanEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    greaterThanEqualTo: (
+      field: string,
+      value: QueryValue
+    ) => AsyncPlatformQuery;
     lessThan: (field: string, value: QueryValue) => AsyncPlatformQuery;
     lessThanEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
     notEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
@@ -539,7 +542,10 @@ declare namespace CbServer {
     count(query: AsyncPlatformQuery): Promise<{ count: number }>;
     createIndex(columnName: string): Promise<string>;
     createUniqueIndex(columnName: string): Promise<string>;
-    upsert(changes: Partial<T>, uniquelyIndexedColumn: string): Promise<Array<CollectionSchema<T>>>;
+    upsert(
+      changes: Partial<T>,
+      uniquelyIndexedColumn: string
+    ): Promise<Array<CollectionSchema<T>>>;
   }
 
   interface MQTT {
@@ -587,6 +593,12 @@ declare namespace CbServer {
     rlock(): Promise<unknown>;
     runlock(): Promise<unknown>;
   }
+}
+
+declare namespace CbServer.Column {
+  type Number = number | null;
+  type Timestamp = string | null;
+  type JsonB<JsonType> = JsonType | null;
 }
 
 /* eslint-disable no-var */
