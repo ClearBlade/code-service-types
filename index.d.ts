@@ -415,21 +415,20 @@ declare namespace CbServer {
     Fetch(name: string, callback: CbCallback): void;
   }
   interface TimerCreateOptions {
-    description?: string;
-    start_time?: Date;
-    repeats?: number;
-    frequency?: number;
-    service_name?: string;
-    user_id?: string;
-    user_token?: string;
+    description: string;
+    start_time: string; // ISO 8601 Date in UTC, e.g., "2021-02-05T17:28:58.587Z"
+    repeats: number;
+    frequency: number;
+    service_name: string;
   }
+  type TimerUpdateOptions = Partial<TimerCreateOptions>;
   interface TimerClass {
     Create(
       name: string,
       options: TimerCreateOptions,
       callback: CbCallback
     ): void;
-    Fetch(name: string, callback: CbCallback): void;
+    Fetch(name: string, callback: CbCallback<TimerInstance>): void;
   }
   interface TriggerInstance {
     name: string;
@@ -440,7 +439,10 @@ declare namespace CbServer {
   interface TimerInstance {
     name: string;
     systemKey: string;
-    Update(options: object, callback: CbCallback): void;
+    Update(
+      options: TimerUpdateOptions,
+      callback: CbCallback<TimerInstance>
+    ): void;
     Delete(callback: CbCallback): void;
   }
   interface Cache<T = unknown> {
