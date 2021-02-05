@@ -415,7 +415,7 @@ declare namespace CbServer {
     Fetch(name: string, callback: CbCallback): void;
   }
   interface TimerCreateOptions {
-    description: string;
+    description?: string;
     start_time: string; // ISO 8601 Date in UTC, e.g., "2021-02-05T17:28:58.587Z"
     repeats: number;
     frequency: number;
