@@ -4,6 +4,15 @@
 //                 Clark Bynum <https://github.com/ClearBlade>
 // Minimum TypeScript Version: 3.0
 declare namespace CbServer {
+  namespace ColumnTypes {
+    type Number = number | null;
+    type Timestamp = string | null;
+    type JsonB<JsonType> = JsonType | null;
+  }
+
+  interface CollectionItem {
+    item_id: string;
+  }
   interface BasicReq<T = {}> {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: TriggerQuery };
@@ -407,20 +416,19 @@ declare namespace CbServer {
   }
   interface TimerCreateOptions {
     description?: string;
-    start_time?: Date;
-    repeats?: number;
-    frequency?: number;
-    service_name?: string;
-    user_id?: string;
-    user_token?: string;
+    start_time: string; // ISO 8601 Date in UTC, e.g., "2021-02-05T17:28:58.587Z"
+    repeats: number;
+    frequency: number;
+    service_name: string;
   }
+  type TimerUpdateOptions = Partial<TimerCreateOptions>;
   interface TimerClass {
     Create(
       name: string,
       options: TimerCreateOptions,
       callback: CbCallback
     ): void;
-    Fetch(name: string, callback: CbCallback): void;
+    Fetch(name: string, callback: CbCallback<TimerInstance>): void;
   }
   interface TriggerInstance {
     name: string;
@@ -431,7 +439,10 @@ declare namespace CbServer {
   interface TimerInstance {
     name: string;
     systemKey: string;
-    Update(options: object, callback: CbCallback): void;
+    Update(
+      options: TimerUpdateOptions,
+      callback: CbCallback<TimerInstance>
+    ): void;
     Delete(callback: CbCallback): void;
   }
   interface Cache<T = unknown> {
@@ -479,7 +490,10 @@ declare namespace CbServer {
     or: (q: AsyncPlatformQuery) => AsyncPlatformQuery;
     equalTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
     greaterThan: (field: string, value: QueryValue) => AsyncPlatformQuery;
-    greaterThanEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
+    greaterThanEqualTo: (
+      field: string,
+      value: QueryValue
+    ) => AsyncPlatformQuery;
     lessThan: (field: string, value: QueryValue) => AsyncPlatformQuery;
     lessThanEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
     notEqualTo: (field: string, value: QueryValue) => AsyncPlatformQuery;
@@ -539,7 +553,10 @@ declare namespace CbServer {
     count(query: AsyncPlatformQuery): Promise<{ count: number }>;
     createIndex(columnName: string): Promise<string>;
     createUniqueIndex(columnName: string): Promise<string>;
-    upsert(changes: Partial<T>, uniquelyIndexedColumn: string): Promise<Array<CollectionSchema<T>>>;
+    upsert(
+      changes: Partial<T>,
+      uniquelyIndexedColumn: string
+    ): Promise<Array<CollectionSchema<T>>>;
   }
 
   interface MQTT {

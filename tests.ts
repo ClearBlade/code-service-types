@@ -223,7 +223,16 @@ ClearBlade.Trigger.Fetch("triggername", genericCallback);
 ///////////////////////////////////////
 // Timers API invocations
 ///////////////////////////////////////
-ClearBlade.Timer.Create("timername", {}, genericCallback);
+ClearBlade.Timer.Create(
+  "timername",
+  {
+    service_name: "",
+    frequency: 600,
+    repeats: -1,
+    start_time: "2021-02-05T17:28:58.587Z",
+  },
+  genericCallback
+);
 ClearBlade.Timer.Fetch("timername", genericCallback);
 
 ///////////////////////////////////////
