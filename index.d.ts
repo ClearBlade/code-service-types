@@ -5,6 +5,7 @@
 // Minimum TypeScript Version: 3.0
 declare namespace CbServer {
   namespace ColumnTypes {
+    type String = string | null;
     type Number = number | null;
     type Timestamp = string | null;
     type JsonB<JsonType> = JsonType | null;
