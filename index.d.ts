@@ -121,7 +121,7 @@ declare namespace CbServer {
     registerUser(email: string, password: string, callback: CbCallback): void;
     setUser(email: string, authToken: string, userId: string): void;
     User(): AppUser;
-    Cache(name: string): Cache;
+    Cache<T extends object>(name: string): Cache<T>;
     createDevice(
       name: string,
       data: object,
@@ -506,6 +506,7 @@ declare namespace CbServer {
     rawQuery: (rawQuery: string) => AsyncPlatformQuery;
   }
   interface ClearBladeAsync {
+    Cache<T extends object>(name: string): CacheAsync<T>;
     Collection<T extends object>(
       options:
         | string
@@ -522,6 +523,9 @@ declare namespace CbServer {
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
+  }
+  interface CacheAsync<T = unknown> {
+    getAll(): Promise<T>;
   }
 
   interface DatabaseAsync {
