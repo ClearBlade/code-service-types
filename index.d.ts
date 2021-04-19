@@ -524,7 +524,7 @@ declare namespace CbServer {
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
   }
-  interface CacheAsync<T = unknown> {
+  interface CacheAsync<T = object> {
     getAll(): Promise<T>;
   }
 
