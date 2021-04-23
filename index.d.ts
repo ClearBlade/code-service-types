@@ -525,7 +525,13 @@ declare namespace CbServer {
     Database(options?: { externalDBName: string }): DatabaseAsync;
   }
   interface CacheAsync<T = object> {
-    getAll(): Promise<T>;
+    get(key: string): Promise<T>;
+    set(key: string, value: T): Promise<unknown>;
+    setnx(key: string, value: T): Promise<boolean>;
+    getAll(): Promise<Record<string, T>>;
+    delete(key: string): Promise<unknown>;
+    flush(): Promise<unknown>;
+    keys(pattern: string): Promise<string[]>;
   }
 
   interface DatabaseAsync {
