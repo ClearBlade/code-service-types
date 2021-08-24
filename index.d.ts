@@ -504,6 +504,7 @@ declare namespace CbServer {
     ascending: (field: string) => AsyncPlatformQuery;
     descending: (field: string) => AsyncPlatformQuery;
     rawQuery: (rawQuery: string) => AsyncPlatformQuery;
+    Queries: Query[][];
   }
   interface ClearBladeAsync {
     Cache<T extends object>(name: string): CacheAsync<T>;
