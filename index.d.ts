@@ -184,30 +184,31 @@ declare namespace CbServer {
     update(
       query: PlatformQuery,
       changes: object,
-      callback: CbCallback<"success">
+      callback: CbCallback<'success'>
     ): void;
     remove(query: PlatformQuery, callback: CbCallback): void;
     columns(callback: CbCallback): void;
     count(query: PlatformQuery, callback: CbCallback<{ count: number }>): void;
   }
   enum QuerySortDirections {
-    QUERY_SORT_ASCENDING = "ASC",
-    QUERY_SORT_DESCENDING = "DESC",
+    QUERY_SORT_ASCENDING = 'ASC',
+    QUERY_SORT_DESCENDING = 'DESC',
   }
   enum QueryConditions {
-    QUERY_EQUAL = "EQ",
-    QUERY_NOTEQUAL = "NEQ",
-    QUERY_GREATERTHAN = "GT",
-    QUERY_GREATERTHAN_EQUAL = "GTE",
-    QUERY_LESSTHAN = "LT",
-    QUERY_LESSTHAN_EQUAL = "LTE",
-    QUERY_MATCHES = "RE",
+    QUERY_EQUAL = 'EQ',
+    QUERY_NOTEQUAL = 'NEQ',
+    QUERY_GREATERTHAN = 'GT',
+    QUERY_GREATERTHAN_EQUAL = 'GTE',
+    QUERY_LESSTHAN = 'LT',
+    QUERY_LESSTHAN_EQUAL = 'LTE',
+    QUERY_MATCHES = 'RE',
   }
   type QueryValue =
     | string
     | number
     | boolean
     | Date
+    | null
     | string[]
     | number[]
     | boolean[]
@@ -394,10 +395,10 @@ declare namespace CbServer {
     create(newDevice: object, callback: CbCallback): void;
   }
   enum TriggerModule {
-    DEVICE = "Device",
-    Data = "Data",
-    MESSAGING = "Messaging",
-    USER = "User",
+    DEVICE = 'Device',
+    Data = 'Data',
+    MESSAGING = 'Messaging',
+    USER = 'User',
   }
   interface TriggerCreateOptions {
     system_key: string;
