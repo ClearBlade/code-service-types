@@ -252,5 +252,3 @@ const statusCodeCallBack = (req: CbServer.BasicReq, resp: CbServer.Resp) => {
 const setHeaderCallBack = (req: CbServer.BasicReq, resp: CbServer.Resp) => {
   resp.set({ headerA: "value" });
 };
-
-declare var ClearBlade: CbServer.ClearBladeGlobal;
