@@ -4,7 +4,7 @@ declare var ClearBladeAsync: CbServer.ClearBladeAsync;
 declare var MQTT: CbServer.MQTT;
 type Logger = (message?: unknown, ...args: unknown[]) => void;
 declare var log: Logger;
-declare var Requests: () => {
+declare function Requests(): {
   put: (
     options: { [key: string]: unknown },
     callback: (data: unknown) => void
