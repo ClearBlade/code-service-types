@@ -536,9 +536,21 @@ declare namespace CbServer {
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
+    Users<T extends object>(): UsersAsync<T>;
+    Roles(): RolesAsync;
   }
+
+  interface RolesAsync {
+    grantedTo(id: string): Promise<string[]>;
+    read(query?: AsyncPlatformQuery): Promise<Role[]>;
+  }
+
+  interface UsersAsync<T extends object> {
+    read(query?: AsyncPlatformQuery): Promise<T[]>;
+  }
+
   interface CacheAsync<CacheValue> {
-    get<GetValue = CacheValue>(key: string): Promise<GetValue>;
+    get<GetValue = CacheValue>(key: string): Promise<GetValue | undefined>;
     set(key: string, value: CacheValue): Promise<unknown>;
     setnx(key: string, value: CacheValue): Promise<boolean>;
     getAll(): Promise<Record<string, CacheValue>>;
