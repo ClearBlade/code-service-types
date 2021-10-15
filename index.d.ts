@@ -222,7 +222,7 @@ declare namespace CbServer {
     PAGENUM?: number;
   }
   type TriggerQueryFilter = {
-    [key in QueryConditions]?: Array<Record<string, QueryValue>>;
+    [key in QueryConditions]?: Record<string, QueryValue>;
   };
   interface QueryOptions {
     offset?: number;
