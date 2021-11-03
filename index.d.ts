@@ -527,6 +527,8 @@ declare namespace CbServer {
         | CollectionOptionsWithID
         | CollectionOptionsWithCollection
     ): CollectionAsync<T>;
+    FS(deploymentName: string): FSAsync; // FileSystem
+    File(deploymentName: string, path: string): FileAsync; // Single File
     Query(
       options?:
         | QueryOptionsWithCollection
@@ -557,6 +559,29 @@ declare namespace CbServer {
     delete(key: string): Promise<unknown>;
     flush(): Promise<unknown>;
     keys(pattern: string): Promise<string[]>;
+  }
+
+  interface FileStats {
+    permissions: string;
+    size: number;
+  }
+  interface FSAsync {
+    readDir(path: string): Promise<string[]>;
+    readFile(path: string, encoding?: string): Promise<string | Uint8Array>;
+    writeFile(path: string, data: string | Uint8Array): Promise<unknown>;
+    renameFile(oldPath: string, newPath: string): Promise<unknown>;
+    copyFile(srcPath: string, dstPath: string): Promise<unknown>;
+    deleteFile(path: string): Promise<unknown>;
+    stat(path: string): Promise<FileStats>;
+  }
+
+  interface FileAsync {
+    stat: Promise<FileStats>;
+    read(encoding?: string): Promise<string | Uint8Array>;
+    write(data: string | Uint8Array): Promise<unknown>;
+    rename(newPath: string): Promise<unknown>;
+    copy(dstPath: string): Promise<unknown>;
+    delete(): Promise<unknown>;
   }
 
   interface DatabaseAsync {
