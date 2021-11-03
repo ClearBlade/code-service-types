@@ -14,7 +14,13 @@ ClearBlade.init({
   callback: genericCallback,
 });
 
+const callerInfo: CbServer.CallerInfo = {
+  userEmail: "test@test.com",
+  userToken: "abcdef",
+  userid: "abcdef",
+};
 const req: CbServer.BasicReq<{ param1: string; param2: number }> = {
+  ...callerInfo,
   isLogging: false,
   params: {
     param1: "1",
@@ -22,10 +28,8 @@ const req: CbServer.BasicReq<{ param1: string; param2: number }> = {
   },
   systemKey: "abcdef",
   systemSecret: "abcdef",
-  userEmail: "test@test.com",
-  userToken: "abcdef",
-  userid: "abcdef",
   service_instance_id: "abcdef",
+  caller: callerInfo,
 };
 
 ClearBlade.init({

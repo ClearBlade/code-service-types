@@ -14,15 +14,19 @@ declare namespace CbServer {
   interface CollectionItem {
     item_id: string;
   }
-  interface BasicReq<T = {}> {
+
+  interface CallerInfo {
+    userid: string;
+    userToken: string;
+    userEmail: string;
+  }
+  interface BasicReq<T = {}> extends CallerInfo {
     readonly isLogging: boolean;
     readonly params: T & { trigger?: string; query?: TriggerQuery };
     readonly systemKey: string;
     readonly systemSecret: string;
-    readonly userEmail: string;
-    readonly userToken: string;
-    readonly userid: string;
     readonly service_instance_id: string;
+    readonly caller: CallerInfo;
   }
   type ReqTypes = BasicReq;
   let req: ReqTypes;
