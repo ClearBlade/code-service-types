@@ -252,7 +252,7 @@ declare namespace CbServer {
 
   interface PlatformQueryState {
     PrimaryKey: string[];
-    Order: Array<OrderInfo>;
+    Order: OrderInfo[];
     PageSize: number;
     PageNumber: number;
     Queries: Query[][];
