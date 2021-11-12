@@ -552,7 +552,11 @@ declare namespace CbServer {
   }
 
   interface UsersAsync<T extends object> {
+    create(user: T): Promise<T>;
     read(query?: AsyncPlatformQuery): Promise<T[]>;
+    update(query: AsyncPlatformQuery, changes: T): Promise<void>;
+    delete(query: AsyncPlatformQuery): Promise<void>;
+    count(query: AsyncPlatformQuery): Promise<{ count: number }>;
   }
 
   interface CacheAsync<CacheValue> {
