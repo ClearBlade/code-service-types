@@ -245,15 +245,20 @@ declare namespace CbServer {
     Value: unknown;
   }
 
+  interface OrderInfo {
+    SortOrder: boolean;
+    OrderKey: string;
+  }
+
   interface PlatformQueryState {
     PrimaryKey: string[];
-    Order: Array<{ SortOrder: boolean; OrderKey: string }>;
+    Order: Array<OrderInfo>;
     PageSize: number;
     PageNumber: number;
     Queries: Query[][];
     Columns: string[];
     Distinct: string;
-    GroupBy: [];
+    GroupBy: string[];
     RawQuery: string;
   }
   interface SerializablePlatformQuery {
@@ -498,7 +503,7 @@ declare namespace CbServer {
     runlock(callback?: (err: boolean, lockType: string) => void): void;
   }
 
-  interface AsyncPlatformQuery extends SerializablePlatformQuery {
+  interface AsyncPlatformQuery extends PlatformQueryState {
     andFilter: (
       Operator: string,
       Field: string,
@@ -520,7 +525,6 @@ declare namespace CbServer {
     ascending: (field: string) => AsyncPlatformQuery;
     descending: (field: string) => AsyncPlatformQuery;
     rawQuery: (rawQuery: string) => AsyncPlatformQuery;
-    Queries: Query[][];
   }
   interface ClearBladeAsync {
     Cache<T extends object>(name: string): CacheAsync<T>;
