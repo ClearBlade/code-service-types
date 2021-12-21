@@ -2,7 +2,7 @@
 // Project: https://github.com/ClearBlade/native-libraries/blob/master/clearblade.md
 // Definitions by: Jim Bouquet <https://github.com/ClearBlade>
 //                 Clark Bynum <https://github.com/ClearBlade>
-// Minimum TypeScript Version: 3.0
+// Minimum TypeScript Version: 4.1
 declare namespace CbServer {
   namespace ColumnTypes {
     type String = string | null;
@@ -697,6 +697,7 @@ declare namespace CbServer {
     TTriggerAction extends string,
     TTriggerInfo
   > = {
+    // tslint:disable-next-line - seems like tslint doesn't know how to handle template literal types
     trigger?: `${TTriggerCategory}::${TTriggerAction}`;
   } & TTriggerInfo;
 
@@ -776,7 +777,7 @@ declare namespace CbServer {
   type DataCollectionDeletedTrigger = MakeDataTableTrigger<"CollectionDeleted">;
 
   interface DataItemInfo {
-    items: { item_id: string }[];
+    items: Array<{ item_id: string }>;
   }
 
   type DataItemCreatedTrigger = MakeDataTrigger<

@@ -5,7 +5,7 @@
   "main": "index.d.ts",
   "scripts": {
     "test": "npm run lint",
-    "lint": "dtslint ."
+    "lint": "dtslint ./types"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,8 @@
     "url": "https://github.com/ClearBlade/code-service-types/issues"
   },
   "homepage": "https://github.com/ClearBlade/code-service-types#readme",
-  "dependencies": {},
   "devDependencies": {
-    "dtslint": "^2.0.5"
+    "dtslint": "^4.2.1"
   },
   "types": "types"
 }

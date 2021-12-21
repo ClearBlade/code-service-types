@@ -1,0 +1,9 @@
+{
+  "extends": "dtslint/dtslint.json",
+  "rules": {
+    "no-empty-interface": false,
+    "npm-naming": false,
+    "no-unnecessary-generics": false,
+    "interface-over-type-literal": false
+  }
+}
