@@ -22,7 +22,7 @@ declare namespace CbServer {
   }
   interface BasicReq<T = {}> extends CallerInfo {
     readonly isLogging: boolean;
-    readonly params: T & { trigger?: string; query?: TriggerQuery };
+    readonly params: T & TriggerTypes;
     readonly systemKey: string;
     readonly systemSecret: string;
     readonly service_instance_id: string;
@@ -677,4 +677,244 @@ declare namespace CbServer {
     rlock(): Promise<unknown>;
     runlock(): Promise<unknown>;
   }
+
+  type TriggerTypes =
+    | MessagingTriggerTypes
+    | DataTriggerTypes
+    | UserTriggerTypes
+    | DeviceTriggerTypes
+    | EdgePlatformTriggerTypes;
+
+  type TriggerCategories =
+    | "Messaging"
+    | "Data"
+    | "User"
+    | "Device"
+    | "StartConnectDisconnect";
+
+  type MakeTrigger<
+    TTriggerCategory extends TriggerCategories,
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = {
+    trigger?: `${TTriggerCategory}::${TTriggerAction}`;
+  } & TTriggerInfo;
+
+  /**
+   * Messaging trigger types
+   */
+
+  type MessagingTriggerTypes =
+    | MessagingPublishTrigger
+    | MessagingSubscribeTrigger
+    | MessagingUnsubscribeTrigger
+    | MessagingUserConnectedTrigger
+    | MessagingUserDisconnectedTrigger
+    | MessagingDeviceConnectedTrigger
+    | MessagingDeviceDisconnectedTrigger;
+
+  type MakeMessagingTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"Messaging", TTriggerAction, TTriggerInfo>;
+
+  type MakeMessagingPubSubTrigger<TTriggerAction extends string> =
+    MakeMessagingTrigger<
+      TTriggerAction,
+      { topic: string; body: string; userId: string }
+    >;
+
+  type MessagingPublishTrigger = MakeMessagingPubSubTrigger<"Publish">;
+  type MessagingSubscribeTrigger = MakeMessagingPubSubTrigger<"Subscribe">;
+  type MessagingUnsubscribeTrigger = MakeMessagingPubSubTrigger<"Unsubscribe">;
+
+  type MakeMessagingUserConnectionTrigger<TTriggerAction extends string> =
+    MakeMessagingTrigger<TTriggerAction, { email: string }>;
+
+  type MessagingUserConnectedTrigger =
+    MakeMessagingUserConnectionTrigger<"MQTTUserConnected">;
+  type MessagingUserDisconnectedTrigger =
+    MakeMessagingUserConnectionTrigger<"MQTTUserDisconnected">;
+
+  type MakeMessagingDeviceConnectionTrigger<TTriggerAction extends string> =
+    MakeMessagingTrigger<TTriggerAction, { deviceName: string }>;
+
+  type MessagingDeviceConnectedTrigger =
+    MakeMessagingDeviceConnectionTrigger<"MQTTDeviceConnected">;
+  type MessagingDeviceDisconnectedTrigger =
+    MakeMessagingDeviceConnectionTrigger<"MQTTDeviceDisconnected">;
+
+  /**
+   * Data trigger types
+   */
+
+  type DataTriggerTypes =
+    | DataCollectionCreatedTrigger
+    | DataCollectionUpdatedTrigger
+    | DataCollectionDeletedTrigger
+    | DataItemCreatedTrigger
+    | DataItemUpdatedTrigger
+    | DataItemDeletedTrigger;
+
+  type MakeDataTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"Data", TTriggerAction, TTriggerInfo>;
+
+  interface CollectionInfo {
+    collectionId: string;
+    collectionName: string;
+  }
+
+  type MakeDataTableTrigger<TTriggerAction extends string> = MakeDataTrigger<
+    TTriggerAction,
+    CollectionInfo
+  >;
+
+  type DataCollectionCreatedTrigger = MakeDataTableTrigger<"CollectionCreated">;
+  type DataCollectionUpdatedTrigger = MakeDataTableTrigger<"CollectionUpdated">;
+  type DataCollectionDeletedTrigger = MakeDataTableTrigger<"CollectionDeleted">;
+
+  interface DataItemInfo {
+    items: { item_id: string }[];
+  }
+
+  type DataItemCreatedTrigger = MakeDataTrigger<
+    "ItemCreated",
+    CollectionInfo & DataItemInfo
+  >;
+  type DataItemUpdatedTrigger = MakeDataTrigger<
+    "ItemUpdated",
+    CollectionInfo & DataItemInfo
+  >;
+  type DataItemDeletedTrigger = MakeDataTrigger<
+    "ItemDeleted",
+    CollectionInfo & DataItemInfo
+  >;
+
+  /**
+   * User trigger types
+   */
+
+  type UserTriggerTypes =
+    | UserCreatedTrigger
+    | UserUpdatedTrigger
+    | UserDeletedTrigger;
+
+  type MakeUserTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"User", TTriggerAction, TTriggerInfo>;
+
+  type UserCreatedTrigger = MakeUserTrigger<
+    "UserCreated",
+    {
+      user: {
+        creation_date: string;
+        email: string;
+        user_id: string;
+      };
+    }
+  >;
+
+  interface UserUpdatedDeletedInfo {
+    user: {
+      email: string;
+      user_id: string;
+    };
+    query: TriggerQuery;
+  }
+  type UserUpdatedTrigger = MakeUserTrigger<
+    "UserUpdated",
+    UserUpdatedDeletedInfo
+  >;
+  type UserDeletedTrigger = MakeUserTrigger<
+    "UserDeleted",
+    UserUpdatedDeletedInfo
+  >;
+
+  /**
+   * Device trigger types
+   */
+
+  type DeviceTriggerTypes = DeviceCreatedTrigger;
+
+  type MakeDeviceTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"Device", TTriggerAction, TTriggerInfo>;
+
+  interface DeviceCreatedDeletedInfo {
+    device: {
+      allow_certificate_auth: boolean;
+      allow_key_auth: boolean;
+      certificate: string;
+      created_date: string;
+      description: string;
+      device_key: string;
+      enabled: boolean;
+      last_active_date: string;
+      system_key: string;
+      type: string;
+    };
+    deviceName: string;
+  }
+  type DeviceCreatedTrigger = MakeDeviceTrigger<
+    "DeviceCreated",
+    DeviceCreatedDeletedInfo
+  >;
+  type DeviceUpdatedTrigger = MakeDeviceTrigger<
+    "DeviceUpdated",
+    {
+      deviceName: string;
+      changes: object;
+    }
+  >;
+  type DeviceDeletedTrigger = MakeDeviceTrigger<
+    "DeviceDeleted",
+    DeviceCreatedDeletedInfo
+  >;
+
+  /**
+   * Edge/platform trigger types
+   */
+
+  type EdgePlatformTriggerTypes =
+    | EdgePlatformPlatformStartedTrigger
+    | EdgePlatformPlatformConnectedOnEdgeTrigger
+    | EdgePlatformPlatformDisconnectedOnEdgeTrigger
+    | EdgePlatformEdgeStartedTrigger
+    | EdgePlatformEdgeConnectedOnPlatformTrigger
+    | EdgePlatformEdgeDisconnectedOnPlatformTrigger;
+
+  type MakeEdgePlatformTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"StartConnectDisconnect", TTriggerAction, TTriggerInfo>;
+
+  type EdgePlatformPlatformStartedTrigger = MakeEdgePlatformTrigger<
+    "PlatformStarted",
+    {}
+  >;
+
+  type EdgePlatformPlatformConnectedOnEdgeTrigger = MakeEdgePlatformTrigger<
+    "PlatformConnectedOnEdgeTrigger",
+    {}
+  >;
+  type EdgePlatformPlatformDisconnectedOnEdgeTrigger = MakeEdgePlatformTrigger<
+    "PlatformDisconnectedOnEdgeTrigger",
+    {}
+  >;
+  type EdgePlatformEdgeStartedTrigger = MakeEdgePlatformTrigger<
+    "EdgeStartedTrigger",
+    {}
+  >;
+  type EdgePlatformEdgeConnectedOnPlatformTrigger = MakeEdgePlatformTrigger<
+    "EdgeConnectedOnPlatformTrigger",
+    {}
+  >;
+  type EdgePlatformEdgeDisconnectedOnPlatformTrigger = MakeEdgePlatformTrigger<
+    "EdgeDisconnectedOnPlatformTrigger",
+    {}
+  >;
 }
