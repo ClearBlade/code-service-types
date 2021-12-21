@@ -697,7 +697,8 @@ declare namespace CbServer {
     TTriggerAction extends string,
     TTriggerInfo
   > = {
-    // tslint:disable-next-line - seems like tslint doesn't know how to handle template literal types
+    // seems like tslint doesn't know how to handle template literal types
+    // tslint:disable-next-line
     trigger?: `${TTriggerCategory}::${TTriggerAction}`;
   } & TTriggerInfo;
 
