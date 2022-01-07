@@ -2,7 +2,7 @@
 // Project: https://github.com/ClearBlade/native-libraries/blob/master/clearblade.md
 // Definitions by: Jim Bouquet <https://github.com/ClearBlade>
 //                 Clark Bynum <https://github.com/ClearBlade>
-// Minimum TypeScript Version: 3.0
+// Minimum TypeScript Version: 4.1
 declare namespace CbServer {
   namespace ColumnTypes {
     type String = string | null;
@@ -14,15 +14,19 @@ declare namespace CbServer {
   interface CollectionItem {
     item_id: string;
   }
-  interface BasicReq<T = {}> {
+
+  interface CallerInfo {
+    userid: string;
+    userToken: string;
+    userEmail: string;
+  }
+  interface BasicReq<T = {}> extends CallerInfo {
     readonly isLogging: boolean;
-    readonly params: T & { trigger?: string; query?: TriggerQuery };
+    readonly params: T & TriggerTypes;
     readonly systemKey: string;
     readonly systemSecret: string;
-    readonly userEmail: string;
-    readonly userToken: string;
-    readonly userid: string;
     readonly service_instance_id: string;
+    readonly caller: CallerInfo;
   }
   type ReqTypes = BasicReq;
   let req: ReqTypes;
@@ -222,7 +226,7 @@ declare namespace CbServer {
     PAGENUM?: number;
   }
   type TriggerQueryFilter = {
-    [key in QueryConditions]?: Array<Record<string, QueryValue>>;
+    [key in QueryConditions]?: Record<string, QueryValue>;
   };
   interface QueryOptions {
     offset?: number;
@@ -241,15 +245,20 @@ declare namespace CbServer {
     Value: unknown;
   }
 
+  interface OrderInfo {
+    SortOrder: boolean;
+    OrderKey: string;
+  }
+
   interface PlatformQueryState {
     PrimaryKey: string[];
-    Order: Array<{ SortOrder: boolean; OrderKey: string }>;
+    Order: OrderInfo[];
     PageSize: number;
     PageNumber: number;
     Queries: Query[][];
     Columns: string[];
     Distinct: string;
-    GroupBy: [];
+    GroupBy: string[];
     RawQuery: string;
   }
   interface SerializablePlatformQuery {
@@ -494,7 +503,7 @@ declare namespace CbServer {
     runlock(callback?: (err: boolean, lockType: string) => void): void;
   }
 
-  interface AsyncPlatformQuery extends SerializablePlatformQuery {
+  interface AsyncPlatformQuery extends PlatformQueryState {
     andFilter: (
       Operator: string,
       Field: string,
@@ -516,7 +525,6 @@ declare namespace CbServer {
     ascending: (field: string) => AsyncPlatformQuery;
     descending: (field: string) => AsyncPlatformQuery;
     rawQuery: (rawQuery: string) => AsyncPlatformQuery;
-    Queries: Query[][];
   }
   interface ClearBladeAsync {
     Cache<T extends object>(name: string): CacheAsync<T>;
@@ -538,9 +546,25 @@ declare namespace CbServer {
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
+    Users<T extends object>(): UsersAsync<T>;
+    Roles(): RolesAsync;
   }
+
+  interface RolesAsync {
+    grantedTo(id: string): Promise<string[]>;
+    read(query?: AsyncPlatformQuery): Promise<Role[]>;
+  }
+
+  interface UsersAsync<T extends object> {
+    create(user: T): Promise<T>;
+    read(query?: AsyncPlatformQuery): Promise<T[]>;
+    update(query: AsyncPlatformQuery, changes: T): Promise<void>;
+    delete(query: AsyncPlatformQuery): Promise<void>;
+    count(query: AsyncPlatformQuery): Promise<{ count: number }>;
+  }
+
   interface CacheAsync<CacheValue> {
-    get<GetValue = CacheValue>(key: string): Promise<GetValue>;
+    get<GetValue = CacheValue>(key: string): Promise<GetValue | undefined>;
     set(key: string, value: CacheValue): Promise<unknown>;
     setnx(key: string, value: CacheValue): Promise<boolean>;
     getAll(): Promise<Record<string, CacheValue>>;
@@ -653,4 +677,246 @@ declare namespace CbServer {
     rlock(): Promise<unknown>;
     runlock(): Promise<unknown>;
   }
+
+  type TriggerTypes =
+    | MessagingTriggerTypes
+    | DataTriggerTypes
+    | UserTriggerTypes
+    | DeviceTriggerTypes
+    | EdgePlatformTriggerTypes;
+
+  type TriggerCategories =
+    | "Messaging"
+    | "Data"
+    | "User"
+    | "Device"
+    | "StartConnectDisconnect";
+
+  type MakeTrigger<
+    TTriggerCategory extends TriggerCategories,
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = {
+    // seems like tslint doesn't know how to handle template literal types
+    // tslint:disable-next-line
+    trigger?: `${TTriggerCategory}::${TTriggerAction}`;
+  } & TTriggerInfo;
+
+  /**
+   * Messaging trigger types
+   */
+
+  type MessagingTriggerTypes =
+    | MessagingPublishTrigger
+    | MessagingSubscribeTrigger
+    | MessagingUnsubscribeTrigger
+    | MessagingUserConnectedTrigger
+    | MessagingUserDisconnectedTrigger
+    | MessagingDeviceConnectedTrigger
+    | MessagingDeviceDisconnectedTrigger;
+
+  type MakeMessagingTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"Messaging", TTriggerAction, TTriggerInfo>;
+
+  type MakeMessagingPubSubTrigger<TTriggerAction extends string> =
+    MakeMessagingTrigger<
+      TTriggerAction,
+      { topic: string; body: string; userId: string }
+    >;
+
+  type MessagingPublishTrigger = MakeMessagingPubSubTrigger<"Publish">;
+  type MessagingSubscribeTrigger = MakeMessagingPubSubTrigger<"Subscribe">;
+  type MessagingUnsubscribeTrigger = MakeMessagingPubSubTrigger<"Unsubscribe">;
+
+  type MakeMessagingUserConnectionTrigger<TTriggerAction extends string> =
+    MakeMessagingTrigger<TTriggerAction, { email: string }>;
+
+  type MessagingUserConnectedTrigger =
+    MakeMessagingUserConnectionTrigger<"MQTTUserConnected">;
+  type MessagingUserDisconnectedTrigger =
+    MakeMessagingUserConnectionTrigger<"MQTTUserDisconnected">;
+
+  type MakeMessagingDeviceConnectionTrigger<TTriggerAction extends string> =
+    MakeMessagingTrigger<TTriggerAction, { deviceName: string }>;
+
+  type MessagingDeviceConnectedTrigger =
+    MakeMessagingDeviceConnectionTrigger<"MQTTDeviceConnected">;
+  type MessagingDeviceDisconnectedTrigger =
+    MakeMessagingDeviceConnectionTrigger<"MQTTDeviceDisconnected">;
+
+  /**
+   * Data trigger types
+   */
+
+  type DataTriggerTypes =
+    | DataCollectionCreatedTrigger
+    | DataCollectionUpdatedTrigger
+    | DataCollectionDeletedTrigger
+    | DataItemCreatedTrigger
+    | DataItemUpdatedTrigger
+    | DataItemDeletedTrigger;
+
+  type MakeDataTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"Data", TTriggerAction, TTriggerInfo>;
+
+  interface CollectionInfo {
+    collectionId: string;
+    collectionName: string;
+  }
+
+  type MakeDataTableTrigger<TTriggerAction extends string> = MakeDataTrigger<
+    TTriggerAction,
+    CollectionInfo
+  >;
+
+  type DataCollectionCreatedTrigger = MakeDataTableTrigger<"CollectionCreated">;
+  type DataCollectionUpdatedTrigger = MakeDataTableTrigger<"CollectionUpdated">;
+  type DataCollectionDeletedTrigger = MakeDataTableTrigger<"CollectionDeleted">;
+
+  interface DataItemInfo {
+    items: Array<{ item_id: string }>;
+  }
+
+  type DataItemCreatedTrigger = MakeDataTrigger<
+    "ItemCreated",
+    CollectionInfo & DataItemInfo
+  >;
+  type DataItemUpdatedTrigger = MakeDataTrigger<
+    "ItemUpdated",
+    CollectionInfo & DataItemInfo
+  >;
+  type DataItemDeletedTrigger = MakeDataTrigger<
+    "ItemDeleted",
+    CollectionInfo & DataItemInfo
+  >;
+
+  /**
+   * User trigger types
+   */
+
+  type UserTriggerTypes =
+    | UserCreatedTrigger
+    | UserUpdatedTrigger
+    | UserDeletedTrigger;
+
+  type MakeUserTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"User", TTriggerAction, TTriggerInfo>;
+
+  type UserCreatedTrigger = MakeUserTrigger<
+    "UserCreated",
+    {
+      user: {
+        creation_date: string;
+        email: string;
+        user_id: string;
+      };
+    }
+  >;
+
+  interface UserUpdatedDeletedInfo {
+    user: {
+      email: string;
+      user_id: string;
+    };
+    query: TriggerQuery;
+  }
+  type UserUpdatedTrigger = MakeUserTrigger<
+    "UserUpdated",
+    UserUpdatedDeletedInfo
+  >;
+  type UserDeletedTrigger = MakeUserTrigger<
+    "UserDeleted",
+    UserUpdatedDeletedInfo
+  >;
+
+  /**
+   * Device trigger types
+   */
+
+  type DeviceTriggerTypes = DeviceCreatedTrigger;
+
+  type MakeDeviceTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"Device", TTriggerAction, TTriggerInfo>;
+
+  interface DeviceCreatedDeletedInfo {
+    device: {
+      allow_certificate_auth: boolean;
+      allow_key_auth: boolean;
+      certificate: string;
+      created_date: string;
+      description: string;
+      device_key: string;
+      enabled: boolean;
+      last_active_date: string;
+      system_key: string;
+      type: string;
+    };
+    deviceName: string;
+  }
+  type DeviceCreatedTrigger = MakeDeviceTrigger<
+    "DeviceCreated",
+    DeviceCreatedDeletedInfo
+  >;
+  type DeviceUpdatedTrigger = MakeDeviceTrigger<
+    "DeviceUpdated",
+    {
+      deviceName: string;
+      changes: object;
+    }
+  >;
+  type DeviceDeletedTrigger = MakeDeviceTrigger<
+    "DeviceDeleted",
+    DeviceCreatedDeletedInfo
+  >;
+
+  /**
+   * Edge/platform trigger types
+   */
+
+  type EdgePlatformTriggerTypes =
+    | EdgePlatformPlatformStartedTrigger
+    | EdgePlatformPlatformConnectedOnEdgeTrigger
+    | EdgePlatformPlatformDisconnectedOnEdgeTrigger
+    | EdgePlatformEdgeStartedTrigger
+    | EdgePlatformEdgeConnectedOnPlatformTrigger
+    | EdgePlatformEdgeDisconnectedOnPlatformTrigger;
+
+  type MakeEdgePlatformTrigger<
+    TTriggerAction extends string,
+    TTriggerInfo
+  > = MakeTrigger<"StartConnectDisconnect", TTriggerAction, TTriggerInfo>;
+
+  type EdgePlatformPlatformStartedTrigger = MakeEdgePlatformTrigger<
+    "PlatformStarted",
+    {}
+  >;
+
+  type EdgePlatformPlatformConnectedOnEdgeTrigger = MakeEdgePlatformTrigger<
+    "PlatformConnectedOnEdgeTrigger",
+    {}
+  >;
+  type EdgePlatformPlatformDisconnectedOnEdgeTrigger = MakeEdgePlatformTrigger<
+    "PlatformDisconnectedOnEdgeTrigger",
+    {}
+  >;
+  type EdgePlatformEdgeStartedTrigger = MakeEdgePlatformTrigger<
+    "EdgeStartedTrigger",
+    {}
+  >;
+  type EdgePlatformEdgeConnectedOnPlatformTrigger = MakeEdgePlatformTrigger<
+    "EdgeConnectedOnPlatformTrigger",
+    {}
+  >;
+  type EdgePlatformEdgeDisconnectedOnPlatformTrigger = MakeEdgePlatformTrigger<
+    "EdgeDisconnectedOnPlatformTrigger",
+    {}
+  >;
 }
