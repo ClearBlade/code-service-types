@@ -683,14 +683,16 @@ declare namespace CbServer {
     | DataTriggerTypes
     | UserTriggerTypes
     | DeviceTriggerTypes
-    | EdgePlatformTriggerTypes;
+    | EdgePlatformTriggerTypes
+    | UserRolesTriggerTypes;
 
   type TriggerCategories =
     | "Messaging"
     | "Data"
     | "User"
     | "Device"
-    | "StartConnectDisconnect";
+    | "StartConnectDisconnect"
+    | "UserRoles";
 
   type MakeTrigger<
     TTriggerCategory extends TriggerCategories,
@@ -919,4 +921,27 @@ declare namespace CbServer {
     "EdgeDisconnectedOnPlatformTrigger",
     {}
   >;
+
+  /**
+   * User Roles trigger types
+   */
+
+  type UserRolesTriggerTypes =
+    | UserRolesRoleAddedTrigger
+    | UserRolesRoleRemovedTrigger;
+
+  type MakeUserRolesTrigger<TTriggerAction extends string> = MakeTrigger<
+    "UserRoles",
+    TTriggerAction,
+    {
+      roleID: string;
+      roles: string;
+      topicPath: string;
+      trigger: string;
+      userID: string;
+    }
+  >;
+
+  type UserRolesRoleAddedTrigger = MakeUserRolesTrigger<"UserRoleAdded">;
+  type UserRolesRoleRemovedTrigger = MakeUserRolesTrigger<"UserRoleRemoved">;
 }
