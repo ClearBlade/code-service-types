@@ -986,9 +986,7 @@ declare namespace CbServer {
   interface ExecSyncOptionsWithStringEncoding extends ExecSyncOptions {
     encoding: BufferEncoding;
   }
-  interface ExecSyncOptionsWithBufferEncoding extends ExecSyncOptions {
-    encoding?: "buffer" | null | undefined;
-  }
+
   interface ChildProcess {
     execSync(command: string): Buffer;
     execSync(
