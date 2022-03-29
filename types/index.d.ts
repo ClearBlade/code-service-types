@@ -546,8 +546,16 @@ declare namespace CbServer {
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
+    Triggers(): TriggersAsync;
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
+  }
+
+  interface TriggersAsync {
+    create(option: Omit<TriggerCreateOptions, "system_key">): Promise<Object>;
+    read(query: Query): Promise<Object[]>;
+    update(query: Query, changes: Object): Promise<Object[]>;
+    delete(query: Query): Promise<{}>;
   }
 
   interface RolesAsync {
