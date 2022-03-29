@@ -2,6 +2,7 @@
 declare var ClearBlade: CbServer.ClearBladeGlobal;
 declare var ClearBladeAsync: CbServer.ClearBladeAsync;
 declare var MQTT: CbServer.MQTT;
+declare var child_process: CbServer.ChildProcess;
 type Logger = (message?: unknown, ...args: unknown[]) => void;
 declare var log: Logger;
 declare function Requests(): {

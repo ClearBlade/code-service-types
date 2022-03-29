@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ClearBlade/code-service-types#readme",
   "devDependencies": {
+    "@types/node": "^17.0.23",
     "dtslint": "^4.2.1"
   },
   "types": "types"

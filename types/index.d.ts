@@ -944,4 +944,56 @@ declare namespace CbServer {
 
   type UserRolesRoleAddedTrigger = MakeUserRolesTrigger<"UserRoleAdded">;
   type UserRolesRoleRemovedTrigger = MakeUserRolesTrigger<"UserRoleRemoved">;
+  interface ProcessEnvOptions {
+    uid?: number | undefined;
+    gid?: number | undefined;
+    cwd?: string | URL | undefined;
+    env?: NodeJS.ProcessEnv | undefined;
+  }
+
+  type IOType = "overlapped" | "pipe" | "ignore" | "inherit";
+
+  type Stream = import("node:stream").Stream;
+  type StdioOptions =
+    | IOType
+    | Array<IOType | "ipc" | Stream | number | null | undefined>;
+  interface CommonOptions extends ProcessEnvOptions {
+    /**
+     * @default true
+     */
+    windowsHide?: boolean | undefined;
+    /**
+     * @default 0
+     */
+    timeout?: number | undefined;
+  }
+
+  interface CommonExecOptions extends CommonOptions {
+    input?: string | NodeJS.ArrayBufferView | undefined;
+    stdio?: StdioOptions | undefined;
+    killSignal?: NodeJS.Signals | number | undefined;
+    maxBuffer?: number | undefined;
+    encoding?: BufferEncoding | "buffer" | null | undefined;
+  }
+  interface ExecSyncOptions extends CommonExecOptions {
+    shell?: string | undefined;
+  }
+  interface ExecSyncOptionsWithStringEncoding extends ExecSyncOptions {
+    encoding: BufferEncoding;
+  }
+  interface ExecSyncOptionsWithBufferEncoding extends ExecSyncOptions {
+    encoding?: "buffer" | null | undefined;
+  }
+  interface ChildProcess {
+    execSync(command: string): Buffer;
+    execSync(
+      command: string,
+      options: ExecSyncOptionsWithStringEncoding
+    ): string;
+    execSync(
+      command: string,
+      options: ExecSyncOptionsWithBufferEncoding
+    ): Buffer;
+    execSync(command: string, options?: ExecSyncOptions): string | Buffer;
+  }
 }
