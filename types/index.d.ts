@@ -288,7 +288,9 @@ declare namespace CbServer {
     matches: (field: string, pattern: string) => PlatformQuery;
     setPage: (pageSize: number, pageNum: number) => PlatformQuery;
     rawQuery: (rawQuery: string) => PlatformQuery;
-    fetch<T = {}>(callback: CbCallback<CollectionFetchData<T>>): PlatformQuery;
+    fetch<T extends {} = {}>(
+      callback: CbCallback<CollectionFetchData<T>>
+    ): PlatformQuery;
     update(changes: object, callback: CbCallback): PlatformQuery;
     remove(callback: CbCallback): PlatformQuery;
   }
@@ -546,8 +548,16 @@ declare namespace CbServer {
     Lock(lockName: string, caller: string): LockAsync;
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
+    Triggers(): TriggersAsync;
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
+  }
+
+  interface TriggersAsync {
+    create(option: Omit<TriggerCreateOptions, "system_key">): Promise<object>;
+    read(query: Query): Promise<object[]>;
+    update(query: Query, changes: object): Promise<object[]>;
+    delete(query: Query): Promise<object>;
   }
 
   interface RolesAsync {
@@ -944,4 +954,45 @@ declare namespace CbServer {
 
   type UserRolesRoleAddedTrigger = MakeUserRolesTrigger<"UserRoleAdded">;
   type UserRolesRoleRemovedTrigger = MakeUserRolesTrigger<"UserRoleRemoved">;
+
+  interface ProcessEnvOptions {
+    uid?: number | undefined;
+    gid?: number | undefined;
+    cwd?: string | URL | undefined;
+    env?: NodeJS.ProcessEnv | undefined;
+  }
+
+  type IOType = "overlapped" | "pipe" | "ignore" | "inherit";
+
+  type Stream = import("node:stream").Stream;
+  type StdioOptions =
+    | IOType
+    | Array<IOType | "ipc" | Stream | number | null | undefined>;
+  interface CommonOptions extends ProcessEnvOptions {
+    windowsHide?: boolean | undefined;
+    timeout?: number | undefined;
+  }
+
+  interface CommonExecOptions extends CommonOptions {
+    input?: string | NodeJS.ArrayBufferView | undefined;
+    stdio?: StdioOptions | undefined;
+    killSignal?: NodeJS.Signals | number | undefined;
+    maxBuffer?: number | undefined;
+    encoding?: BufferEncoding | "buffer" | null | undefined;
+  }
+  interface ExecSyncOptions extends CommonExecOptions {
+    shell?: string | undefined;
+  }
+  interface ExecSyncOptionsWithStringEncoding extends ExecSyncOptions {
+    encoding: BufferEncoding;
+  }
+
+  interface ChildProcess {
+    execSync(command: string): Buffer;
+    execSync(
+      command: string,
+      options: ExecSyncOptionsWithStringEncoding
+    ): string | Buffer;
+    execSync(command: string, options?: ExecSyncOptions): string | Buffer;
+  }
 }
