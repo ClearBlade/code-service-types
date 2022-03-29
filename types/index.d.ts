@@ -288,7 +288,9 @@ declare namespace CbServer {
     matches: (field: string, pattern: string) => PlatformQuery;
     setPage: (pageSize: number, pageNum: number) => PlatformQuery;
     rawQuery: (rawQuery: string) => PlatformQuery;
-    fetch<T = {}>(callback: CbCallback<CollectionFetchData<T>>): PlatformQuery;
+    fetch<T extends {} = {}>(
+      callback: CbCallback<CollectionFetchData<T>>
+    ): PlatformQuery;
     update(changes: object, callback: CbCallback): PlatformQuery;
     remove(callback: CbCallback): PlatformQuery;
   }
@@ -552,10 +554,10 @@ declare namespace CbServer {
   }
 
   interface TriggersAsync {
-    create(option: Omit<TriggerCreateOptions, "system_key">): Promise<Object>;
-    read(query: Query): Promise<Object[]>;
-    update(query: Query, changes: Object): Promise<Object[]>;
-    delete(query: Query): Promise<{}>;
+    create(option: Omit<TriggerCreateOptions, "system_key">): Promise<object>;
+    read(query: Query): Promise<object[]>;
+    update(query: Query, changes: object): Promise<object[]>;
+    delete(query: Query): Promise<object>;
   }
 
   interface RolesAsync {
@@ -952,6 +954,7 @@ declare namespace CbServer {
 
   type UserRolesRoleAddedTrigger = MakeUserRolesTrigger<"UserRoleAdded">;
   type UserRolesRoleRemovedTrigger = MakeUserRolesTrigger<"UserRoleRemoved">;
+
   interface ProcessEnvOptions {
     uid?: number | undefined;
     gid?: number | undefined;
@@ -966,13 +969,7 @@ declare namespace CbServer {
     | IOType
     | Array<IOType | "ipc" | Stream | number | null | undefined>;
   interface CommonOptions extends ProcessEnvOptions {
-    /**
-     * @default true
-     */
     windowsHide?: boolean | undefined;
-    /**
-     * @default 0
-     */
     timeout?: number | undefined;
   }
 
@@ -997,11 +994,7 @@ declare namespace CbServer {
     execSync(
       command: string,
       options: ExecSyncOptionsWithStringEncoding
-    ): string;
-    execSync(
-      command: string,
-      options: ExecSyncOptionsWithBufferEncoding
-    ): Buffer;
+    ): string | Buffer;
     execSync(command: string, options?: ExecSyncOptions): string | Buffer;
   }
 }

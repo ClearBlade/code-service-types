@@ -6,7 +6,7 @@
       "noImplicitThis": true,
       "strictFunctionTypes": true,
       "strictNullChecks": true,
-      "types": ["node"],
+      "types": [],
       "noEmit": true,
       "forceConsistentCasingInFileNames": true,
 
