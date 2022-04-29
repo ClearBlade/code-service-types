@@ -551,10 +551,10 @@ declare namespace CbServer {
     Triggers(): TriggersAsync;
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
-    Preloader<TRequestParams>(): PreloaderAsync<TRequestParams>;
+    Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
   }
 
-  interface PreloaderAsync<TRequestParams> {
+  interface PreloaderAsync<TRequestParams = {}> {
     listen: (
       callback: (newReq: BasicReq<TRequestParams>, rewResp: Resp) => void
     ) => Promise<void>;
