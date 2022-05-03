@@ -37,6 +37,13 @@ declare namespace CbServer {
     set(headers: object): void;
     status(status_code: number): void;
   }
+  interface PreloaderResp {
+    error(msg: unknown): void;
+    success(msg: unknown): void;
+    send(msg: unknown): void;
+    set(headers: object): void;
+    status(status_code: number): void;
+  }
   let resp: Resp;
   enum MessagingQOS {
     MESSAGING_QOS_AT_MOST_ONCE = 0,
@@ -556,7 +563,10 @@ declare namespace CbServer {
 
   interface PreloaderAsync<TRequestParams = {}> {
     listen: (
-      callback: (newReq: BasicReq<TRequestParams>, rewResp: Resp) => void
+      callback: (
+        newReq: BasicReq<TRequestParams>,
+        rewResp: PreloaderResp
+      ) => void
     ) => Promise<void>;
   }
 
