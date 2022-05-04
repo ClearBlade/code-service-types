@@ -24,4 +24,12 @@ declare function Requests(): {
     callback: (err: unknown, data: string) => void
   ) => void;
 };
+declare var cbmeta: {
+  is_edge: boolean;
+  platform_url: string;
+  service_id: string;
+  service_name: string;
+  system_key: string;
+  system_secret: string;
+};
 /* eslint-enable no-var */
