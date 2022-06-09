@@ -556,6 +556,7 @@ declare namespace CbServer {
     newCollection(name: string): Promise<{ id: string; name: string }>;
     Database(options?: { externalDBName: string }): DatabaseAsync;
     Triggers(): TriggersAsync;
+    Timers(): TimersAsync;
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
     Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
@@ -572,9 +573,22 @@ declare namespace CbServer {
 
   interface TriggersAsync {
     create(option: Omit<TriggerCreateOptions, "system_key">): Promise<object>;
-    read(query: Query): Promise<object[]>;
-    update(query: Query, changes: object): Promise<object[]>;
-    delete(query: Query): Promise<object>;
+    read(query: AsyncPlatformQuery): Promise<object[]>;
+    update(query: AsyncPlatformQuery, changes: object): Promise<object[]>;
+    delete(query: AsyncPlatformQuery): Promise<object>;
+  }
+
+  interface TimersAsyncCreateOptions extends TimerCreateOptions {
+    name: string;
+    user_id: string;
+    user_type: number; // user type of user_id (1=dev, 2=user, 3=device)
+  }
+
+  interface TimersAsync {
+    create(option: TimersAsyncCreateOptions): Promise<object>;
+    read(query: AsyncPlatformQuery): Promise<object[]>;
+    update(query: AsyncPlatformQuery, changes: object): Promise<object[]>;
+    delete(query: AsyncPlatformQuery): Promise<object>;
   }
 
   interface RolesAsync {
