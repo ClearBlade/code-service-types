@@ -581,7 +581,7 @@ declare namespace CbServer {
   interface TimersAsyncCreateOptions extends TimerCreateOptions {
     name: string;
     user_id?: string;
-    user_type?: number; // user type of user_id (1=dev, 2=user, 3=device)
+    user_type?: 1 | 2 | 3; // user type of user_id (1=dev, 2=user, 3=device)
   }
 
   interface TimersAsync {
