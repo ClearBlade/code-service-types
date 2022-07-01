@@ -560,6 +560,8 @@ declare namespace CbServer {
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
     Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
+    CustomSync(): CustomSyncAsync;
+    Secret(): SecretAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
@@ -671,6 +673,19 @@ declare namespace CbServer {
       changes: Partial<T>,
       uniquelyIndexedColumn: string
     ): Promise<Array<CollectionSchema<T>>>;
+  }
+
+  interface CustomSyncAsync<T extends object> {
+    sync(collectionName: string, data: CollectionSchema<T>, destination: string, interval: string): Promise<unknown[]>;
+  }
+
+  interface SecretAsync {
+    create(name: string, data: string): Promise<unknown>;
+    read(name: string): Promise<string>;
+    readWithQuery(query: AsyncPlatformQuery): Promise<{ name: string, data: string}>;
+    update(name: string, data: string): Promise<unknown>;
+    delete(name: string): Promise<unknown>;
+    deleteWithQuery(query: AsyncPlatformQuery): Promise<unknown>;
   }
 
   interface MQTT {
