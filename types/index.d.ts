@@ -676,7 +676,10 @@ declare namespace CbServer {
   }
 
   interface CustomSyncAsync<T extends object> {
-    sync(collectionName: string, data: CollectionSchema<T>, destination: string, interval: string): Promise<unknown[]>;
+    Platform: string;
+    AllEdges: string;
+    Now: string;
+    sync(collectionName: string, data: CollectionSchema<T>, destination: string, interval?: string): Promise<unknown[]>;
   }
 
   interface SecretAsync {
