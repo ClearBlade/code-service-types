@@ -560,7 +560,7 @@ declare namespace CbServer {
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
     Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
-    CustomSync<T extends object>(): CustomSyncAsync<T>;
+    CustomSync(): CustomSyncAsync;
     Secret(): SecretAsync;
   }
 
@@ -675,11 +675,11 @@ declare namespace CbServer {
     ): Promise<Array<CollectionSchema<T>>>;
   }
 
-  interface CustomSyncAsync<T extends object> {
+  interface CustomSyncAsync {
     Platform: string;
     AllEdges: string;
     Now: string;
-    sync(collectionName: string, data: CollectionSchema<T>, destination: string, interval?: string): Promise<unknown[]>;
+    sync(collectionName: string, data: Record<string, unknown>, destination: string, interval?: string): Promise<unknown[]>;
   }
 
   interface SecretAsync {
