@@ -560,7 +560,7 @@ declare namespace CbServer {
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
     Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
-    CustomSync(): CustomSyncAsync;
+    CustomSync<T extends object>(): CustomSyncAsync<T>;
     Secret(): SecretAsync;
   }
 
