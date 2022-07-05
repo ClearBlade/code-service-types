@@ -562,6 +562,7 @@ declare namespace CbServer {
     Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
     CustomSync(): CustomSyncAsync;
     Secret(): SecretAsync;
+    Edges(): EdgesAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
@@ -683,12 +684,19 @@ declare namespace CbServer {
   }
 
   interface SecretAsync {
-    create(name: string, data: string): Promise<unknown>;
+    create(info: string, data: string): Promise<unknown>;
     read(name: string): Promise<string>;
     readWithQuery(query: AsyncPlatformQuery): Promise<{ name: string, data: string}>;
     update(name: string, data: string): Promise<unknown>;
     delete(name: string): Promise<unknown>;
     deleteWithQuery(query: AsyncPlatformQuery): Promise<unknown>;
+  }
+
+  interface EdgesAsync {
+    create(info: Record<string, unknown>): Promise<Record<string, unknown>>;
+    read(query: AsyncPlatformQuery): Promise<Array<Record<string, unknown>>>;
+    update(query: AsyncPlatformQuery, changes: Record<string, unknown>): Promise<Array<Record<string, unknown>>>;
+    delete(query: AsyncPlatformQuery): Promise<unknown>;
   }
 
   interface MQTT {
