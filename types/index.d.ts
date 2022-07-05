@@ -693,9 +693,9 @@ declare namespace CbServer {
   }
 
   interface EdgesAsync {
-    create(info: Record<string, unknown>): Promise<Object>;
-    read(query: AsyncPlatformQuery): Promise<Object[]>;
-    update(query: AsyncPlatformQuery, changes: Record<string, unknown>): Promise<Object[]>;
+    create(info: Record<string, unknown>): Promise<Record<string, unknown>>;
+    read(query: AsyncPlatformQuery): Promise<Record<string, unknown>[]>;
+    update(query: AsyncPlatformQuery, changes: Record<string, unknown>): Promise<Record<string, unknown>[]>;
     delete(query: AsyncPlatformQuery): Promise<unknown>;
   }
 
