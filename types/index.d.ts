@@ -738,6 +738,52 @@ declare namespace CbServer {
       retain?: boolean
     ): Promise<unknown>;
   }
+
+  interface ClearBladeAI {
+    Model: ClearBladeAIModelConstructor;
+  }
+  interface ClearBladeAIModelOptions {
+    bucket_set: string;
+    path: string;
+  }
+  interface ClearBladeAIModelConstructor {
+    new (options: ClearBladeAIModelOptions): ClearBladeAIModel;
+  }
+  type IOInfo = {
+    name: string;
+    type:
+      | "unknown"
+      | "tensor"
+      | "sequence"
+      | "map"
+      | "opaque"
+      | "sparse tensor"
+      | "optional";
+    dataType:
+      | "float32"
+      | "float64"
+      | "int8"
+      | "int16"
+      | "int32"
+      | "int64"
+      | "uint8"
+      | "uint16"
+      | "uint32"
+      | "complex64"
+      | "complex128"
+      | "bool"
+      | "string";
+    shape: number[];
+  };
+  interface ClearBladeAIModel {
+    inputs: IOInfo[];
+    outputs: IOInfo[];
+    exec: (
+      desiredOutputs: string[],
+      inputs: Record<string, unknown[]>
+    ) => Promise<unknown[]>;
+  }
+
   interface LockAsync {
     lock(): Promise<unknown>;
     unlock(): Promise<unknown>;
