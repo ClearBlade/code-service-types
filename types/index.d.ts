@@ -723,7 +723,7 @@ declare namespace CbServer {
   interface ClearBladeAIModelConstructor {
     new (options: ClearBladeAIModelOptions): ClearBladeAIModel;
   }
-  interface IOInfo {
+  type IOInfo = {
     name: string;
     type:
       | "unknown"
@@ -748,7 +748,7 @@ declare namespace CbServer {
       | "bool"
       | "string";
     shape: number[];
-  }
+  };
   interface ClearBladeAIModel {
     inputs: IOInfo[];
     outputs: IOInfo[];
