@@ -689,12 +689,12 @@ declare namespace CbServer {
   }
 
   interface SecretAsync {
-    create(info: string, data: string): Promise<unknown>;
-    read(name: string): Promise<string>;
+    create(info: string, data: unknown): Promise<unknown>;
+    read(name: string): Promise<unknown>;
     readWithQuery(
       query: AsyncPlatformQuery
-    ): Promise<{ name: string; data: string }>;
-    update(name: string, data: string): Promise<unknown>;
+    ): Promise<{ name: string; data: unknown }>;
+    update(name: string, data: unknown): Promise<unknown>;
     delete(name: string): Promise<unknown>;
     deleteWithQuery(query: AsyncPlatformQuery): Promise<unknown>;
   }
