@@ -33,14 +33,14 @@ declare namespace CbServer {
   interface Resp {
     error(msg: unknown): never;
     success(msg: unknown): never;
-    send(msg: unknown): never;
+    send(msg?: unknown): never;
     set(headers: object): void;
     status(status_code: number): void;
   }
   interface PreloaderResp {
     error(msg: unknown): void;
     success(msg: unknown): void;
-    send(msg: unknown): void;
+    send(msg?: unknown): void;
     set(headers: object): void;
     status(status_code: number): void;
   }
