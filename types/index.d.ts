@@ -641,8 +641,8 @@ declare namespace CbServer {
   }
 
   interface DatabaseAsync {
-    query(rawQuery: string): Promise<unknown[]>;
-    exec(rawQuery: string): Promise<{ count: number }>;
+    query(rawQuery: string, ...params: unknown[]): Promise<unknown[]>;
+    exec(rawQuery: string, ...params: unknown[]): Promise<{ count: number }>;
     performOperation(command: string): Promise<unknown>;
     performOperation(...commands: unknown[]): Promise<unknown>;
   }
@@ -680,13 +680,20 @@ declare namespace CbServer {
     Platform: string;
     AllEdges: string;
     Now: string;
-    sync(collectionName: string, data: Record<string, unknown>, destination: string, interval?: string): Promise<unknown[]>;
+    sync(
+      collectionName: string,
+      data: Record<string, unknown>,
+      destination: string,
+      interval?: string
+    ): Promise<unknown[]>;
   }
 
   interface SecretAsync {
     create(info: string, data: string): Promise<unknown>;
     read(name: string): Promise<string>;
-    readWithQuery(query: AsyncPlatformQuery): Promise<{ name: string, data: string}>;
+    readWithQuery(
+      query: AsyncPlatformQuery
+    ): Promise<{ name: string; data: string }>;
     update(name: string, data: string): Promise<unknown>;
     delete(name: string): Promise<unknown>;
     deleteWithQuery(query: AsyncPlatformQuery): Promise<unknown>;
@@ -695,7 +702,10 @@ declare namespace CbServer {
   interface EdgesAsync {
     create(info: Record<string, unknown>): Promise<Record<string, unknown>>;
     read(query: AsyncPlatformQuery): Promise<Array<Record<string, unknown>>>;
-    update(query: AsyncPlatformQuery, changes: Record<string, unknown>): Promise<Array<Record<string, unknown>>>;
+    update(
+      query: AsyncPlatformQuery,
+      changes: Record<string, unknown>
+    ): Promise<Array<Record<string, unknown>>>;
     delete(query: AsyncPlatformQuery): Promise<unknown>;
   }
 
