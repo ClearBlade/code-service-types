@@ -563,6 +563,7 @@ declare namespace CbServer {
     CustomSync(): CustomSyncAsync;
     Secret(): SecretAsync;
     Edges(): EdgesAsync;
+    Auth(): AuthAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
@@ -707,6 +708,24 @@ declare namespace CbServer {
       changes: Record<string, unknown>
     ): Promise<Array<Record<string, unknown>>>;
     delete(query: AsyncPlatformQuery): Promise<unknown>;
+  }
+
+  interface AuthResponse {
+    auth_token: string;
+    refresh_token: string;
+    expiry: number;
+  }
+
+  interface AuthAsync {
+    authAnon: () => Promise<AuthResponse>;
+    authDevice: (
+      deviceName: string,
+      deviceKey: string
+    ) => Promise<AuthResponse>;
+    authUser: (email: string, password: string) => Promise<AuthResponse>;
+    reauth: (refreshToken: string) => Promise<AuthResponse>;
+    impersonateUser: (userID: string) => Promise<AuthResponse>;
+    userIDFromToken: (token: string) => Promise<string>;
   }
 
   interface MQTT {
