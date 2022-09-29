@@ -44,4 +44,14 @@ interface Response {
   json(): unknown;
   text(): string;
 }
+
+/**
+ * Override Crypto from lib.dom.ts since the ClearBlade native crypto library
+ * specifies additional methods
+ * https://github.com/ClearBlade/native-libraries/blob/master/crypto.md
+ */
+interface Crypto {
+  encode(encodingType: "base64", data: string): string;
+  decode(encodingType: "base64", encodedData: string): string;
+}
 /* eslint-enable no-var */
