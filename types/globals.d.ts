@@ -33,4 +33,15 @@ declare var cbmeta: {
   system_key: string;
   system_secret: string;
 };
+/**
+ * Override the Response from lib.dom.d.ts since the
+ * fetch library in the ClearBlade code engine returns values directly
+ * rather than returning a promise to the value
+ * See differences here https://github.com/ClearBlade/native-libraries/blob/master/fetch.md#fetch
+ *
+ */
+interface Response {
+  json(): unknown;
+  text(): string;
+}
 /* eslint-enable no-var */
