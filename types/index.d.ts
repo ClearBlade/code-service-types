@@ -564,6 +564,7 @@ declare namespace CbServer {
     Secret(): SecretAsync;
     Edges(): EdgesAsync;
     Auth(): AuthAsync;
+    Devices(): DevicesAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
@@ -726,6 +727,17 @@ declare namespace CbServer {
     reauth: (refreshToken: string) => Promise<AuthResponse>;
     impersonateUser: (userID: string) => Promise<AuthResponse>;
     userIDFromToken: (token: string) => Promise<string>;
+  }
+
+  interface BaseDevice {
+    name: string;
+  }
+
+  interface DevicesAsync {
+    create: (info: object) => Promise<BaseDevice>;
+    read: (query: AsyncPlatformQuery) => Promise<BaseDevice[]>;
+    update: (query: AsyncPlatformQuery, changes: object) => Promise<void>;
+    delete: (query: AsyncPlatformQuery) => Promise<void>;
   }
 
   interface MQTT {
