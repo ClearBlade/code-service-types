@@ -22,11 +22,18 @@ declare namespace CbServer {
   }
   interface BasicReq<T = {}> extends CallerInfo {
     readonly isLogging: boolean;
-    readonly params: T & TriggerTypes;
+    readonly params: T & TriggerTypes & Partial<WebhookParams>;
     readonly systemKey: string;
     readonly systemSecret: string;
     readonly service_instance_id: string;
     readonly caller: CallerInfo;
+  }
+  interface WebhookParams {
+    method: string;
+    uri: string;
+    body: unknown;
+    query: Record<string, string[]>;
+    headers: Record<string, string[]>;
   }
   type ReqTypes = BasicReq;
   let req: ReqTypes;
