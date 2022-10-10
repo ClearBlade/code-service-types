@@ -566,6 +566,7 @@ declare namespace CbServer {
     Timers(): TimersAsync;
     Users<T extends object>(): UsersAsync<T>;
     Roles(): RolesAsync;
+    Role(roleID: string): RoleAsync;
     Preloader<TRequestParams = {}>(): PreloaderAsync<TRequestParams>;
     CustomSync(): CustomSyncAsync;
     Secret(): SecretAsync;
@@ -606,6 +607,18 @@ declare namespace CbServer {
   interface RolesAsync {
     grantedTo(id: string): Promise<string[]>;
     read(query?: AsyncPlatformQuery): Promise<Role[]>;
+    create(info: { name: string; description?: string }): Promise<string>;
+  }
+
+  interface RoleAsync {
+    applyTo(deviceNameOrUserID: string): Promise<void>;
+    setPermissions(permissions: Permission | Permission[]): Promise<void>;
+  }
+
+  interface Permission {
+    type: string;
+    name?: string;
+    level: number;
   }
 
   interface UsersAsync<T extends object> {
