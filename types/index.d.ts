@@ -608,6 +608,11 @@ declare namespace CbServer {
     grantedTo(id: string): Promise<string[]>;
     read(query?: AsyncPlatformQuery): Promise<Role[]>;
     create(info: { name: string; description?: string }): Promise<string>;
+    delete(query: AsyncPlatformQuery): Promise<void>;
+    update(
+      query: AsyncPlatformQuery,
+      changes: { name: string; description?: string }
+    ): Promise<void>;
   }
 
   interface RoleAsync {
