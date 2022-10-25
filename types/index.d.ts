@@ -519,6 +519,32 @@ declare namespace CbServer {
     runlock(callback?: (err: boolean, lockType: string) => void): void;
   }
 
+  interface AdminAuditLogInfo {
+    service_name: string;
+    method_name: string;
+    requester_email: string;
+    permission_name: string;
+    device_name: string;
+    device_num_id: string;
+    request: object;
+    response?: object;
+  }
+
+  interface DeviceEventLogInfo {
+    device_name: string;
+    event_type: string;
+    success: boolean;
+    payload: object;
+  }
+
+  interface GoogleCloudLoggerAsync {
+    adminAuditLog: (info: AdminAuditLogInfo, project?: string) => Promise<void>;
+    deviceEventLog: (
+      info: DeviceEventLogInfo,
+      project?: string
+    ) => Promise<void>;
+  }
+
   interface AsyncPlatformQuery extends PlatformQueryState {
     andFilter: (
       Operator: string,
@@ -573,6 +599,7 @@ declare namespace CbServer {
     Edges(): EdgesAsync;
     Auth(): AuthAsync;
     Devices(): DevicesAsync;
+    GoogleCloudLogger(): GoogleCloudLoggerAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
