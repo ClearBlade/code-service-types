@@ -27,11 +27,15 @@ declare function Requests(): {
 };
 declare var cbmeta: {
   is_edge: boolean;
+  edge_id?: string;
+  edge_url?: string;
   platform_url: string;
+  node_id: string;
   service_id: string;
   service_name: string;
   system_key: string;
   system_secret: string;
+  code_versions: Record<string, number>;
 };
 /**
  * Override the Response from lib.dom.d.ts since the
