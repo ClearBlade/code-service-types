@@ -113,7 +113,26 @@ declare namespace CbServer {
     ): Collection<T>;
     Deployment(): Deployment;
     Device(): Device;
-    deviceConnections(deviceName: string, callback: CbCallback): Device;
+    deviceConnections(
+      deviceName: string,
+      callback: CbCallback<{
+        allow_certificate_auth: boolean;
+        allow_key_auth: boolean;
+        connections: {
+          client_id: string;
+          time_connected: string;
+        }[];
+        created_date: number;
+        device_key: string;
+        enabled: boolean;
+        has_keys: boolean;
+        last_active_date: number;
+        name: string;
+        state: string;
+        system_key: string;
+        type: string;
+      }>
+    ): Device;
     edgeId(): string;
     execute(error: object, response: object, callback: CbCallback): void;
     getAllCollections(callback: CbCallback): void;
