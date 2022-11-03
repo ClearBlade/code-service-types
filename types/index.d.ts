@@ -113,6 +113,7 @@ declare namespace CbServer {
     ): Collection<T>;
     Deployment(): Deployment;
     Device(): Device;
+    deviceConnections(deviceName: string, callback: CbCallback): Device;
     edgeId(): string;
     execute(error: object, response: object, callback: CbCallback): void;
     getAllCollections(callback: CbCallback): void;
