@@ -118,10 +118,10 @@ declare namespace CbServer {
       callback: CbCallback<{
         allow_certificate_auth: boolean;
         allow_key_auth: boolean;
-        connections: {
+        connections: Array<{
           client_id: string;
           time_connected: string;
-        }[];
+        }>;
         created_date: number;
         device_key: string;
         enabled: boolean;
