@@ -846,7 +846,7 @@ declare namespace CbServer {
     ): Promise<unknown>;
     publish(
       topic: string,
-      payload: string | MQTTMessage,
+      payload: string | MQTTMessage | Uint8Array,
       qos?: number,
       retain?: boolean
     ): Promise<unknown>;
