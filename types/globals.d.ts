@@ -37,6 +37,7 @@ declare var cbmeta: {
   system_secret: string;
   code_versions: Record<string, number>;
 };
+declare var newUUID: () => string;
 /**
  * Override the Response from lib.dom.d.ts since the
  * fetch library in the ClearBlade code engine returns values directly
