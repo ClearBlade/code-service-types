@@ -665,6 +665,7 @@ declare namespace CbServer {
   interface RoleAsync {
     applyTo(deviceNameOrUserID: string): Promise<void>;
     setPermissions(permissions: Permission | Permission[]): Promise<void>;
+    stripFrom(deviceNameOrUserID: string): Promise<void>;
   }
 
   interface Permission {
@@ -674,8 +675,8 @@ declare namespace CbServer {
   }
 
   interface UsersAsync<T extends object> {
-    create(user: T): Promise<T>;
-    read(query?: AsyncPlatformQuery): Promise<T[]>;
+    create(user: T & { password: string }): Promise<string>;
+    read(query?: AsyncPlatformQuery): Promise<T & { user_id: string }[]>;
     update(query: AsyncPlatformQuery, changes: T): Promise<void>;
     delete(query: AsyncPlatformQuery): Promise<void>;
     count(query: AsyncPlatformQuery): Promise<{ count: number }>;
