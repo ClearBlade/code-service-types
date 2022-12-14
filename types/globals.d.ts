@@ -38,6 +38,7 @@ declare var cbmeta: {
   code_versions: Record<string, number>;
 };
 declare var newUUID: () => string;
+declare var sleep: (ms: number) => void;
 /**
  * Override the Response from lib.dom.d.ts since the
  * fetch library in the ClearBlade code engine returns values directly
