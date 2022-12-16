@@ -676,7 +676,7 @@ declare namespace CbServer {
 
   interface UsersAsync<T extends object> {
     create(user: T & { password: string }): Promise<string>;
-    read(query?: AsyncPlatformQuery): Promise<T & { user_id: string }[]>;
+    read(query?: AsyncPlatformQuery): Promise<T & Array<{ user_id: string }>>;
     update(query: AsyncPlatformQuery, changes: T): Promise<void>;
     delete(query: AsyncPlatformQuery): Promise<void>;
     count(query: AsyncPlatformQuery): Promise<{ count: number }>;
