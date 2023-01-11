@@ -569,6 +569,54 @@ declare namespace CbServer {
     reportHTTPDataUsage: (systemKey: string, size: number) => Promise<void>;
   }
 
+  interface GoogleCloudMonitoringAsync {
+    Protocol: {
+      MQTT: "mqtt";
+      HTTP: "http";
+    };
+    Direction: {
+      INGRESS: "ingress";
+      EGRESS: "egress";
+    };
+    OperationType: {
+      EVENT: "event";
+      STATE: "state";
+      HEARTBEAT: "heartbeat";
+      SUBSCRIBE: "subscribe";
+      UNSUBSCRIBE: "unsubscribe";
+      CONFIG_SENT: "config_sent";
+      CONFIG_ACK: "config_ack";
+      COMMAND_SENT: "command_sent";
+      COMMAND_ACK: "command_ack";
+      CONNECTION_OPEN: "connection_open";
+      DISCONNECT: "disconnect";
+    };
+    ErrorType: {
+      TELEMETRY_PUBLISH_INTERNAL: "telemetry_publish_internal";
+      TELEMETRY_PUBLISH_USER: "telemetry_publish_user";
+      SET_STATE_INTERNAL: "set_state_internal";
+      SET_STATE_USER: "set_state_user";
+      INCOMING_BUFFER_FULL: "incoming_buffer_full";
+    };
+    reportActiveDevicesMetric: (
+      protocol: GoogleCloudMonitoringAsync["Protocol"][keyof GoogleCloudMonitoringAsync["Protocol"]]
+    ) => Promise<void>;
+    reportBillingBytesCountMetric: (
+      protocol: GoogleCloudMonitoringAsync["Protocol"][keyof GoogleCloudMonitoringAsync["Protocol"]],
+      direction: GoogleCloudMonitoringAsync["Direction"][keyof GoogleCloudMonitoringAsync["Direction"]],
+      bytescount: number
+    ) => Promise<void>;
+    reportErrorCountMetric: (
+      protocol: GoogleCloudMonitoringAsync["Protocol"][keyof GoogleCloudMonitoringAsync["Protocol"]],
+      errorType: GoogleCloudMonitoringAsync["ErrorType"][keyof GoogleCloudMonitoringAsync["ErrorType"]]
+    ) => Promise<void>;
+    reportOperationCountMetric: (
+      operationType: GoogleCloudMonitoringAsync["OperationType"][keyof GoogleCloudMonitoringAsync["OperationType"]]
+    ) => Promise<void>;
+    reportReceivedBytesCountMetric: (bytesCount: number) => Promise<void>;
+    reportSentBytesCountMetric: (bytesCount: number) => Promise<void>;
+  }
+
   interface AsyncPlatformQuery extends PlatformQueryState {
     andFilter: (
       Operator: string,
@@ -625,6 +673,7 @@ declare namespace CbServer {
     Devices(): DevicesAsync;
     GoogleCloudLogger(): GoogleCloudLoggerAsync;
     DataUsage(): DataUsageAsync;
+    GoogleCloudMonitoring(): GoogleCloudMonitoringAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
