@@ -1,6 +1,6 @@
 {
   "name": "@clearblade/code-service-types",
-  "version": "3.9.15",
+  "version": "3.10.0",
   "description": "TypeScript declarations for the ClearBlade Code Service engine",
   "main": "index.d.ts",
   "scripts": {
