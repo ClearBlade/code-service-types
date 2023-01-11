@@ -565,6 +565,10 @@ declare namespace CbServer {
     ) => Promise<void>;
   }
 
+  interface DataUsageAsync {
+    reportHTTPDataUsage: (systemKey: string, size: number) => Promise<void>;
+  }
+
   interface AsyncPlatformQuery extends PlatformQueryState {
     andFilter: (
       Operator: string,
@@ -620,6 +624,7 @@ declare namespace CbServer {
     Auth(): AuthAsync;
     Devices(): DevicesAsync;
     GoogleCloudLogger(): GoogleCloudLoggerAsync;
+    DataUsage(): DataUsageAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
