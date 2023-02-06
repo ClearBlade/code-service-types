@@ -59,5 +59,6 @@ interface Response {
 interface Crypto {
   encode(encodingType: "base64", data: string): string;
   decode(encodingType: "base64", encodedData: string): Uint8Array;
+  create_jwt(claims: object, algorithm: string, privateKey: string): string;
 }
 /* eslint-enable no-var */
