@@ -769,11 +769,18 @@ declare namespace CbServer {
     delete(): Promise<unknown>;
   }
 
+  interface Statement {
+    statement: string;
+    args: unknown[];
+  }
+
   interface DatabaseAsync {
     query(rawQuery: string, ...params: unknown[]): Promise<unknown[]>;
     exec(rawQuery: string, ...params: unknown[]): Promise<{ count: number }>;
     performOperation(command: string): Promise<unknown>;
     performOperation(...commands: unknown[]): Promise<unknown>;
+    statement(rawQuery: string, ...params: unknown[]): Statement;
+    transaction(statements: Statement[]): Promise<void>;
   }
 
   interface CollectionAsync<T extends object> {
