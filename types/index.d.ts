@@ -122,7 +122,7 @@ declare namespace CbServer {
           client_id: string;
           time_connected: string;
         }>;
-        attached_proxies: Array<string>;
+        attached_proxies: string[];
         created_date: number;
         device_key: string;
         enabled: boolean;
