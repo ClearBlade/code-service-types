@@ -12,7 +12,7 @@ Add an entry to the files compiler option option in tsconfig.json
 
 ```
 {
-  "files": ["node_modules/@clearblade/code-service-types/index.d.ts"]
+  "files": ["node_modules/@clearblade/code-service-types/types/index.d.ts"]
 }
 ```
 
