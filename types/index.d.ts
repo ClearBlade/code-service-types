@@ -118,10 +118,7 @@ declare namespace CbServer {
       callback: CbCallback<{
         allow_certificate_auth: boolean;
         allow_key_auth: boolean;
-        connections: Array<{
-          client_id: string;
-          time_connected: string;
-        }>;
+        connections: DeviceConnection[];
         attached_proxies: string[];
         created_date: number;
         device_key: string;
@@ -873,6 +870,22 @@ declare namespace CbServer {
     read: (query: AsyncPlatformQuery) => Promise<BaseDevice[]>;
     update: (query: AsyncPlatformQuery, changes: object) => Promise<void>;
     delete: (query: AsyncPlatformQuery) => Promise<void>;
+    connectedDevices: () => Promise<Record<string, DeviceConnection>>;
+    deviceConnections: (name: string) => Promise<{
+      name: string;
+      connections: DeviceConnection[];
+      attached_proxies: string[];
+    }>;
+    connectedDeviceCount: () => Promise<{
+      total_devices: number;
+      total_device_connections: number;
+      unique_device_connections: number;
+    }>;
+  }
+
+  interface DeviceConnection {
+    client_id: string;
+    time_connected: string;
   }
 
   interface MQTT {
