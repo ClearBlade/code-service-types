@@ -8,7 +8,7 @@ TypeScript type declarations for the [ClearBlade library](https://github.com/Cle
 
 ## Configuration
 
-Add an entry to the files compiler option option in tsconfig.json
+Add an entry to the files compiler option in tsconfig.json.
 
 ```
 {
@@ -21,4 +21,4 @@ Add an entry to the files compiler option option in tsconfig.json
 
 ## Motivation
 
-Going through the PR process of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) has proven to be difficult for our team as the [ClearBlade library](https://github.com/ClearBlade/native-libraries/blob/master/clearblade.md) is being constantly updated. In order to provide up-to-date type declarations we have temporarily moved outside of DefinitelyTyped. Once changes to the library become less frequent we will move back to the standard `@types` declaration system.
+Going through the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) PR process has proven to be difficult for our team as the [ClearBlade library](https://github.com/ClearBlade/native-libraries/blob/master/clearblade.md) is being constantly updated. To provide up-to-date type declarations, we have temporarily moved outside of DefinitelyTyped. Once changes to the library become less frequent, we will move back to the standard `@types` declaration system.
