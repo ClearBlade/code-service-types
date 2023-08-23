@@ -567,6 +567,51 @@ declare namespace CbServer {
     reportHTTPDataUsage: (systemKey: string, size: number) => Promise<void>;
   }
 
+  interface MessageHistoryAsync {
+    read: (query?: AsyncPlatformQuery) => Promise<{
+      data: Array<{
+        pk: string;
+        topicid: string;
+        ip: string;
+        time: number;
+        payloadsize: number;
+        payload: string;
+        userid: string;
+        qos: number;
+      }>;
+    }>;
+  }
+
+  interface CreateDevicePublicKey {
+    public_key: string;
+    key_format: 0 | 1 | 2 | 3;
+    expiration_time?: string;
+  }
+
+  interface DevicePublicKey {
+    id: string;
+    device_key: string;
+    public_key: string;
+    key_format: 0 | 1 | 2 | 3;
+    date_added: number;
+    expiration_time: number;
+  }
+
+  interface DevicePublicKeysAsync {
+    read: (deviceName: string) => Promise<{
+      data: DevicePublicKey[];
+    }>;
+    create: (
+      deviceName: string,
+      keyInfo: CreateDevicePublicKey
+    ) => Promise<{
+      data: DevicePublicKey;
+    }>;
+    // todo: add type for update
+    // update: (keyId: string, changes: todo) => {};
+    delete: (query: AsyncPlatformQuery) => Promise<void>;
+  }
+
   interface GoogleCloudMonitoringAsync {
     Protocol: {
       MQTT: "mqtt";
@@ -672,6 +717,8 @@ declare namespace CbServer {
     GoogleCloudLogger(): GoogleCloudLoggerAsync;
     DataUsage(): DataUsageAsync;
     GoogleCloudMonitoring(): GoogleCloudMonitoringAsync;
+    MessageHistory(): MessageHistoryAsync;
+    DevicePublicKeys(): DevicePublicKeysAsync;
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
