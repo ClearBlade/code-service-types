@@ -582,11 +582,12 @@ declare namespace CbServer {
     }>;
   }
 
-  interface CreateDevicePublicKey {
-    public_key: string;
-    key_format: 0 | 1 | 2 | 3;
+  type CreateDevicePublicKey = Pick<
+    DevicePublicKey,
+    "public_key" | "key_format"
+  > & {
     expiration_time?: string;
-  }
+  };
 
   interface DevicePublicKey {
     id: string;
@@ -612,9 +613,7 @@ declare namespace CbServer {
     delete: (query: AsyncPlatformQuery) => Promise<void>;
     replace: (
       deviceName: string,
-      newKeys: Array<
-        Pick<DevicePublicKey, "key_format" | "public_key" | "expiration_time">
-      >
+      newKeys: CreateDevicePublicKey[]
     ) => Promise<void>;
   }
 
