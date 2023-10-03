@@ -610,6 +610,12 @@ declare namespace CbServer {
     // todo: add type for update
     // update: (keyId: string, changes: todo) => {};
     delete: (query: AsyncPlatformQuery) => Promise<void>;
+    replace: (
+      deviceName: string,
+      newKeys: Array<
+        Pick<DevicePublicKey, "key_format" | "public_key" | "expiration_time">
+      >
+    ) => Promise<void>;
   }
 
   interface GoogleCloudMonitoringAsync {
