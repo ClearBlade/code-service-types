@@ -568,8 +568,8 @@ declare namespace CbServer {
   }
 
   interface MessageHistoryAsync {
-    read: (query?: AsyncPlatformQuery) => Promise<{
-      data: Array<{
+    read: (query?: AsyncPlatformQuery) => Promise<
+      Array<{
         pk: string;
         topicid: string;
         ip: string;
@@ -578,8 +578,8 @@ declare namespace CbServer {
         payload: string;
         userid: string;
         qos: number;
-      }>;
-    }>;
+      }>
+    >;
   }
 
   type CreateDevicePublicKey = Pick<
