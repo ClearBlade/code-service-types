@@ -599,15 +599,11 @@ declare namespace CbServer {
   }
 
   interface DevicePublicKeysAsync {
-    read: (deviceName: string) => Promise<{
-      data: DevicePublicKey[];
-    }>;
+    read: (deviceName: string) => Promise<DevicePublicKey[]>;
     create: (
       deviceName: string,
       keyInfo: CreateDevicePublicKey
-    ) => Promise<{
-      data: DevicePublicKey;
-    }>;
+    ) => Promise<DevicePublicKey>;
     // todo: add type for update
     // update: (keyId: string, changes: todo) => {};
     delete: (query: AsyncPlatformQuery) => Promise<void>;
