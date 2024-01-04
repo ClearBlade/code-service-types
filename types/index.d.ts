@@ -685,7 +685,9 @@ declare namespace CbServer {
     rawQuery: (rawQuery: string) => AsyncPlatformQuery;
   }
   interface ClearBladeAsync {
-    Cache<T extends object>(name: string): CacheAsync<T>;
+    Cache<T extends string | number | boolean | object>(
+      name: string
+    ): CacheAsync<T>;
     Collection<T extends object>(
       options:
         | string
@@ -720,6 +722,14 @@ declare namespace CbServer {
     GoogleCloudMonitoring(): GoogleCloudMonitoringAsync;
     MessageHistory(): MessageHistoryAsync;
     DevicePublicKeys(): DevicePublicKeysAsync;
+    Permissions: typeof Permissions;
+  }
+
+  enum Permissions {
+    READ = 1,
+    CREATE = 2,
+    UPDATE = 4,
+    DELETE = 8,
   }
 
   interface PreloaderAsync<TRequestParams = {}> {
