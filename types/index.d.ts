@@ -464,7 +464,7 @@ declare namespace CbServer {
     start_time: string; // ISO 8601 Date in UTC, e.g., "2021-02-05T17:28:58.587Z"
     repeats: number;
     frequency: number;
-    service_name: string;
+    service_name?: string;
   }
   type TimerUpdateOptions = Partial<TimerCreateOptions>;
   interface TimerClass {
