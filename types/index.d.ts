@@ -34,6 +34,7 @@ declare namespace CbServer {
     body: unknown;
     query: Record<string, string[]>;
     headers: Record<string, string[]>;
+    urlParams: Record<string, string>;
   }
   type ReqTypes = BasicReq;
   let req: ReqTypes;
