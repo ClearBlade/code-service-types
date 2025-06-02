@@ -724,6 +724,16 @@ declare namespace CbServer {
     MessageHistory(): MessageHistoryAsync;
     DevicePublicKeys(): DevicePublicKeysAsync;
     Permissions: typeof Permissions;
+    Code(): CodeAsync;
+  }
+
+  interface CodeAsync {
+    execute(
+      name: string,
+      params: object,
+      loggingEnabled: boolean
+    ): Promise<unknown>;
+    getAllServices(): Promise<string[]>;
   }
 
   enum Permissions {
