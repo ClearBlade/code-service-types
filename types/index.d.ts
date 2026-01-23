@@ -867,7 +867,67 @@ declare namespace CbServer {
       changes: Partial<T>,
       uniquelyIndexedColumn: string
     ): Promise<Array<CollectionSchema<T>>>;
+    createContinuousAggregate(
+      query: string,
+      options: ContinuousAggregateOptions,
+    ): Promise<void>;
+    fetchAggregate(
+      aggregateName: string,
+      query: Query,
+    ): Promise<AggregateResult>;
+    fetchAggregateRaw(
+      aggregateName: string,
+      query: string,
+    ): Promise<Array<Record<string, unknown>>>;
+    dropContinuousAggregate(aggregateName: string): Promise<void>;
   }
+
+  /**
+   * Must be of one of the following forms:
+   *     - "1 second", "1 hour", "1 day", "1 month", "1 year"
+   *     - "X seconds", "X hours", "X days", "X months", "X years" where X > 1
+   */
+  type TimescaleInterval =
+    | "1 second"
+    | "1 hour"
+    | "1 day"
+    | "1 month"
+    | "1 year"
+    | `${number} seconds`
+    | `${number} hours`
+    | `${number} days`
+    | `${number} months`
+    | `${number} years`;
+
+  interface ContinuousAggregateOptions {
+    /**
+     * The name of the continuous aggregate
+     */
+    view_name: string;
+    /**
+     * The offset from the current date to begin aggregating data (Ex. "1 month")
+     */
+    start_offset: TimescaleInterval;
+    /**
+     * The offset from the current date to stop aggregating data (Ex. "12 hours")
+     */
+    end_offset: TimescaleInterval;
+    /**
+     * The interval at which to recompute the continuous aggregate (Ex. "1 hour")
+     */
+    schedule_interval: TimescaleInterval;
+    /**
+     * If set to true, the aggregate will be created without initially calculating the aggregate value
+     */
+    with_no_data: boolean;
+  }
+
+  /**
+   * The results of a database query. Can be directly indexed or call `stream` to access the data as a `ReadableStream`
+   */
+  type AggregateResult = Array<Record<string, unknown>> & {
+    stream: () => ReadableStream;
+  };
 
   interface CustomSyncAsync {
     Platform: string;
