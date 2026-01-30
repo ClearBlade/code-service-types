@@ -871,10 +871,6 @@ declare namespace CbServer {
       query: string,
       options: ContinuousAggregateOptions,
     ): Promise<void>;
-    fetchAggregate(
-      aggregateName: string,
-      query: Query,
-    ): Promise<AggregateResult>;
     fetchAggregateRaw(
       aggregateName: string,
       query: string,
@@ -921,13 +917,6 @@ declare namespace CbServer {
      */
     with_no_data: boolean;
   }
-
-  /**
-   * The results of a database query. Can be directly indexed or call `stream` to access the data as a `ReadableStream`
-   */
-  type AggregateResult = Array<Record<string, unknown>> & {
-    stream: () => ReadableStream;
-  };
 
   interface CustomSyncAsync {
     Platform: string;
