@@ -869,6 +869,7 @@ declare namespace CbServer {
     create(
       newItem: Partial<T> | Array<Partial<T>>
     ): Promise<Array<{ item_id: string }>>;
+    bulkCreate(columnNames: string[], items: any[][]): Promise<void>;
     fetch(query: AsyncPlatformQuery): Promise<CollectionFetchData<T>>;
     count(query: AsyncPlatformQuery): Promise<{ count: number }>;
     createIndex(columnName: string): Promise<string>;
