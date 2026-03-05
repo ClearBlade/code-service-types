@@ -841,8 +841,11 @@ declare namespace CbServer {
     args: unknown[];
   }
 
+  type QueryScalar = string | number | boolean | Date | null;
+  type QueryParam = QueryScalar | readonly QueryScalar[];
+
   interface DatabaseAsync {
-    query(rawQuery: string, ...params: unknown[]): Promise<unknown[]>;
+    query(rawQuery: string, ...params: QueryParam[]): Promise<unknown[]>;
     exec(rawQuery: string, ...params: unknown[]): Promise<{ count: number }>;
     performOperation(command: string): Promise<unknown>;
     performOperation(...commands: unknown[]): Promise<unknown>;
