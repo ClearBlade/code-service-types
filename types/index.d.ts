@@ -846,10 +846,10 @@ declare namespace CbServer {
 
   interface DatabaseAsync {
     query(rawQuery: string, ...params: QueryParam[]): Promise<unknown[]>;
-    exec(rawQuery: string, ...params: unknown[]): Promise<{ count: number }>;
+    exec(rawQuery: string, ...params: QueryParam[]): Promise<{ count: number }>;
     performOperation(command: string): Promise<unknown>;
     performOperation(...commands: unknown[]): Promise<unknown>;
-    statement(rawQuery: string, ...params: unknown[]): Statement;
+    statement(rawQuery: string, ...params: QueryParam[]): Statement;
     transaction(statements: Statement[]): Promise<void>;
   }
 
