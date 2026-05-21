@@ -888,6 +888,7 @@ declare namespace CbServer {
     fetchAggregateRaw(
       aggregateName: string,
       query: string,
+      ...queryParams: unknown[]
     ): Promise<Array<Record<string, unknown>>>;
     dropContinuousAggregate(aggregateName: string): Promise<void>;
   }
