@@ -724,6 +724,16 @@ declare namespace CbServer {
     MessageHistory(): MessageHistoryAsync;
     DevicePublicKeys(): DevicePublicKeysAsync;
     Permissions: typeof Permissions;
+    Code(): CodeAsync;
+  }
+
+  interface CodeAsync {
+    execute(
+      name: string,
+      params: object,
+      loggingEnabled: boolean
+    ): Promise<unknown>;
+    getAllServices(): Promise<string[]>;
   }
 
   enum Permissions {
@@ -831,12 +841,15 @@ declare namespace CbServer {
     args: unknown[];
   }
 
+  type QueryScalar = string | number | boolean | Date | null;
+  type QueryParam = QueryScalar | readonly QueryScalar[];
+
   interface DatabaseAsync {
-    query(rawQuery: string, ...params: unknown[]): Promise<unknown[]>;
-    exec(rawQuery: string, ...params: unknown[]): Promise<{ count: number }>;
+    query(rawQuery: string, ...params: QueryParam[]): Promise<unknown[]>;
+    exec(rawQuery: string, ...params: QueryParam[]): Promise<{ count: number }>;
     performOperation(command: string): Promise<unknown>;
     performOperation(...commands: unknown[]): Promise<unknown>;
-    statement(rawQuery: string, ...params: unknown[]): Statement;
+    statement(rawQuery: string, ...params: QueryParam[]): Statement;
     transaction(statements: Statement[]): Promise<void>;
   }
 
@@ -859,6 +872,7 @@ declare namespace CbServer {
     create(
       newItem: Partial<T> | Array<Partial<T>>
     ): Promise<Array<{ item_id: string }>>;
+    bulkCreate(columnNames: string[], items: any[][]): Promise<void>;
     fetch(query: AsyncPlatformQuery): Promise<CollectionFetchData<T>>;
     count(query: AsyncPlatformQuery): Promise<{ count: number }>;
     createIndex(columnName: string): Promise<string>;
