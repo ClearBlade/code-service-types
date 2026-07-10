@@ -698,6 +698,7 @@ declare namespace CbServer {
     ): CollectionAsync<T>;
     FS(deploymentName: string): FSAsync; // FileSystem
     File(deploymentName: string, path: string): FileAsync; // Single File
+    FileStore(name: string): FileStoreAsync; // Filestore
     Query(
       options?:
         | QueryOptionsWithCollection
@@ -834,6 +835,35 @@ declare namespace CbServer {
     rename(newPath: string): Promise<unknown>;
     copy(dstPath: string): Promise<unknown>;
     delete(): Promise<unknown>;
+  }
+
+  interface FileStoreAsync {
+    read(path: string): Promise<string | Uint8Array>;
+    write(path: string, data: string | Uint8Array): Promise<unknown>;
+    delete(path: string): Promise<unknown>;
+    move(srcPath: string, dstPath: string): Promise<unknown>;
+    copy(srcPath: string, dstPath: string): Promise<unknown>;
+    list(options?: FileStoreListOptions): Promise<FileStoreListResult>;
+  }
+
+  interface FileStoreListOptions {
+    prefix?: string;
+    continuation_token?: string;
+    limit?: number;
+    depth?: number;
+  }
+
+  interface FileStoreFileMeta {
+    full_path: string;
+    size_bytes: number;
+    permissions: string;
+    updated_at: number;
+    is_dir: boolean;
+  }
+
+  interface FileStoreListResult {
+    files: FileStoreFileMeta[];
+    continuation_token?: string;
   }
 
   interface Statement {
