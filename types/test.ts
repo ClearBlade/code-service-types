@@ -242,7 +242,7 @@ ClearBlade.Timer.Fetch("timername", genericCallback);
 ///////////////////////////////////////
 // FileStore API invocations (async)
 ///////////////////////////////////////
-const fileStore = ClearBladeAsync.FileStore("mfe");
+const fileStore = new ClearBladeAsync.FileStore("mfe");
 const fileStoreRead: Promise<string | Uint8Array> = fileStore.read("path/to/file.js");
 const fileStoreWrite: Promise<unknown> = fileStore.write("path/to/file.js", "contents");
 const fileStoreDelete: Promise<unknown> = fileStore.delete("path/to/file.js");

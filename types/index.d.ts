@@ -698,7 +698,7 @@ declare namespace CbServer {
     ): CollectionAsync<T>;
     FS(deploymentName: string): FSAsync; // FileSystem
     File(deploymentName: string, path: string): FileAsync; // Single File
-    FileStore(name: string): FileStoreAsync; // Filestore
+    FileStore: new (name: string) => FileStoreAsync; // Filestore (bound as a constructor, unlike FS/File)
     Query(
       options?:
         | QueryOptionsWithCollection
