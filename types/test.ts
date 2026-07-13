@@ -240,6 +240,21 @@ ClearBlade.Timer.Create(
 ClearBlade.Timer.Fetch("timername", genericCallback);
 
 ///////////////////////////////////////
+// FileStore API invocations (async)
+///////////////////////////////////////
+const fileStore = new ClearBladeAsync.FileStore("mfe");
+const fileStoreRead: Promise<string | Uint8Array> = fileStore.read("path/to/file.js");
+const fileStoreWrite: Promise<unknown> = fileStore.write("path/to/file.js", "contents");
+const fileStoreDelete: Promise<unknown> = fileStore.delete("path/to/file.js");
+const fileStoreMove: Promise<unknown> = fileStore.move("path/to/a.js", "path/to/b.js");
+const fileStoreCopy: Promise<unknown> = fileStore.copy("path/to/a.js", "path/to/b.js");
+const fileStoreList: Promise<CbServer.FileStoreListResult> = fileStore.list({
+  prefix: "path",
+  limit: 10,
+  depth: -1,
+});
+
+///////////////////////////////////////
 // Resp API
 ///////////////////////////////////////
 const customResponseCallBack = (
