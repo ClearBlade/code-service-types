@@ -10,19 +10,19 @@ declare var log: Logger;
 declare function Requests(): {
   put: (
     options: { [key: string]: unknown },
-    callback: (data: unknown) => void
+    callback: (data: unknown) => void,
   ) => void;
   get: (
     options: Record<string, unknown>,
-    callback: (err: unknown, data: string) => void
+    callback: (err: unknown, data: string) => void,
   ) => void;
   post: (
     options: Record<string, unknown>,
-    callback: (err: unknown, data: string) => void
+    callback: (err: unknown, data: string) => void,
   ) => void;
   delete: (
     options: Record<string, unknown>,
-    callback: (err: unknown, data: string) => void
+    callback: (err: unknown, data: string) => void,
   ) => void;
 };
 declare var cbmeta: {
@@ -57,7 +57,7 @@ interface Response {
  * https://github.com/ClearBlade/native-libraries/blob/master/crypto.md
  */
 interface Crypto {
-  encode(encodingType: "base64" | "hex", data: string): string;
+  encode(encodingType: "base64" | "hex", data: string | Uint8Array): string;
   decode(encodingType: "base64" | "hex", encodedData: string): Uint8Array;
   create_jwt(claims: object, algorithm: string, privateKey: string): string;
 }
